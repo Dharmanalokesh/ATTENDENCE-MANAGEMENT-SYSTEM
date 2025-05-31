@@ -1114,9 +1114,10 @@ def scan():
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
     for pin in scanned_pins:
-        c.execute("SELECT pin FROM students WHERE pin = ?", (str(pin).strip('"'),))
+        clean_pin = str(pin).strip().upper()
+        c.execute("SELECT pin FROM students WHERE UPPER(pin) = ?", (clean_pin,))
         if c.fetchone():
-            valid_pins.append(str(pin).strip('"'))
+            valid_pins.append(clean_pin)
         else:
             logging.warning(f"PIN {pin} not found in database, skipping.")
     conn.close()
@@ -1136,9 +1137,19 @@ def scan():
     for pin in valid_pins:
         log_activity("Scan QR", f"Scanned PIN {pin} and marked present for today")
 
+    logging.info(f"Scanned PINs: {scanned_pins}")
+
     return jsonify({
         "status": "success",
         "scanned": valid_pins,
         "excel_updated": excel_updated,
         "gsheets_updated": gsheets_updated
     })
+
+    # Debug: Print all pins in the database
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    c.execute("SELECT pin FROM students")
+    all_pins = [row[0] for row in c.fetchall()]
+    logging.info(f"All PINs in DB: {all_pins}")
+    conn.close()
