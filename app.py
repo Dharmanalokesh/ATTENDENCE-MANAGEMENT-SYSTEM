@@ -1128,21 +1128,6 @@ def scan():
     # Log activity for each scan
     for pin in valid_pins:
         log_activity("Scan QR", f"Scanned PIN {pin} and marked present for today")
-    
-    # Store attendance in a database table (optional)
-    today = datetime.now().strftime("%Y-%m-%d")
-    conn = sqlite3.connect("database.db")
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS attendance (
-        pin TEXT,
-        date TEXT,
-        status TEXT,
-        PRIMARY KEY (pin, date)
-    )''')
-    for pin in valid_pins:
-        c.execute("INSERT OR REPLACE INTO attendance (pin, date, status) VALUES (?, ?, ?)", (pin, today, "Present"))
-    conn.commit()
-    conn.close()
 
     return jsonify({
         "status": "success",
