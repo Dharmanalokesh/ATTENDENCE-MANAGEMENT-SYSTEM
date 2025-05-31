@@ -1090,66 +1090,467 @@ def trainer_dashboard():
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
     return response
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash("Logged out successfully.", "success")
-    return redirect(url_for('home'))
-
 @app.route('/scan', methods=['POST'])
 @login_required
 def scan():
     if current_user.role != 'trainer':
         return jsonify({"status": "error", "message": "Unauthorized"}), 403
-
+    
     data = request.get_json()
     scanned_pins = data.get('scanned_pins', [])
+    
+    if scanned_pins:
+        logging.info(f"Received scanned pins: {scanned_pins}")
+        try:
+            valid_pins = []
+            conn = sqlite3.connect("database.db")
+            c = conn.cursor()
+            for pin in scanned_pins:
+                c.execute("SELECT pin FROM students WHERE pin = ?", (str(pin).strip('"'),))
+                if c.fetchone():
+                    valid_pins.append(str(pin).strip('"'))
+                else:
+                    logging.warning(f"PIN {pin} not found in database, skipping.")
+            conn.close()
 
-    if not scanned_pins:
-        return jsonify({"status": "error", "message": "No QR codes scanned"}), 400
+            if not valid_pins:
+                return jsonify({"status": "error", "message": "No valid pins found in database"}), 400
 
-    # Validate pins against database
-    valid_pins = []
+            excel_updated = update_excel(valid_pins)
+            if not excel_updated:
+                logging.warning("Excel update failed, but proceeding with Google Sheets update.")
+            
+            gsheets_updated = update_google_sheets(valid_pins)
+            
+            for pin in valid_pins:
+                log_activity("Scan QR", f"Scanned PIN {pin}")
+            logging.info(f"Processed valid PINs: {valid_pins}")
+            return jsonify({"status": "success", "scanned": valid_pins, "excel_updated": excel_updated, "gsheets_updated": gsheets_updated})
+        except Exception as e:
+            logging.error(f"Failed to process scan: {e}")
+            return jsonify({"status": "error", "message": f"Error processing scan: {str(e)}"}), 500
+    return jsonify({"status": "error", "message": "No QR codes scanned"})
+
+@app.route('/add_student', methods=['POST'])
+@login_required
+def add_student():
+    if current_user.role != 'trainer':
+        return jsonify({"status": "error", "message": "Unauthorized"}), 403
+    
+    pin = request.form['pin']
+    name = request.form['name']
+    branch = request.form['branch']
+    course = request.form['course']
+    email = request.form.get('email', None)
+    
+    if 'photo' not in request.files:
+        return jsonify({"status": "error", "message": "No photo uploaded"}), 400
+    photo = request.files['photo']
+    if photo.filename == '':
+        return jsonify({"status": "error", "message": "No photo selected"}), 400
+    
+    photo_path = f"static/images/{pin}.jpg"
+    os.makedirs("static/images", exist_ok=True)
+    try:
+        photo.save(photo_path)
+    except Exception as e:
+        logging.error(f"Failed to save photo: {e}")
+        return jsonify({"status": "error", "message": f"Failed to save photo: {e}"}), 500
+    
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
-    for pin in scanned_pins:
-        clean_pin = str(pin).strip().upper()
-        c.execute("SELECT pin FROM students WHERE UPPER(pin) = ?", (clean_pin,))
-        if c.fetchone():
-            valid_pins.append(clean_pin)
+    c.execute('PRAGMA table_info(students)')
+    columns = [column[1] for column in c.fetchall()]
+    insert_columns = ['pin', 'name', 'branch', 'course', 'photo_path']
+    insert_values = [pin, name, branch, course, photo_path]
+    if 'email' in columns and email:
+        insert_columns.append('email')
+        insert_values.append(email)
+    if 'resume_path' in columns:
+        insert_columns.append('resume_path')
+        insert_values.append(None)
+    c.execute(f"INSERT OR REPLACE INTO students ({', '.join(insert_columns)}) VALUES ({', '.join(['?' for _ in insert_columns])})", insert_values)
+    c.execute("INSERT OR IGNORE INTO users VALUES (?, ?, 'student')", (pin, "LOKESH"))
+    conn.commit()
+    conn.close()
+    
+    wb = openpyxl.load_workbook(EXCEL_PATH) if os.path.exists(EXCEL_PATH) else openpyxl.Workbook()
+    sheet_name = course
+    if sheet_name not in wb.sheetnames:
+        ws = wb.create_sheet(sheet_name)
+        ws["A1"] = "PIN (Roll.No)"
+        ws["B1"] = "NAME"
+        ws["C1"] = "BRANCH"
+    ws = wb[sheet_name]
+    sheet_pin_map = {str(ws[f"A{row}"].value).strip('"'): row for row in range(2, ws.max_row + 1) if ws[f"A{row}"].value}
+    if pin not in sheet_pin_map:
+        next_row = ws.max_row + 1
+        ws[f"A{next_row}"] = pin
+        ws[f"B{next_row}"] = name
+        ws[f"C{next_row}"] = branch
+    wb.save(EXCEL_PATH)
+    
+    log_activity("Add Student", f"Added student {name} (PIN: {pin})")
+    return redirect(url_for('trainer_dashboard'))
+
+# Idea #8: Bulk Upload for Adding Students
+@app.route('/bulk_upload_students', methods=['POST'])
+@login_required
+def bulk_upload_students():
+    if current_user.role != 'trainer':
+        return jsonify({"status": "error", "message": "Unauthorized"}), 403
+    
+    if 'file' not in request.files:
+        flash("No file uploaded")
+        logging.warning("No file uploaded")
+        return redirect(url_for('trainer_dashboard', action='add'))
+    
+    file = request.files['file']
+    if file.filename == '':
+        flash("No file selected")
+        logging.warning("No file selected")
+        return redirect(url_for('trainer_dashboard', action='add'))
+    
+    if not (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
+        flash("Invalid file format. Please upload a CSV or Excel file.")
+        logging.warning("Invalid file format")
+        return redirect(url_for('trainer_dashboard', action='add'))
+    
+    try:
+        logging.info(f"Processing file: {file.filename}")
+        if file.filename.endswith('.csv'):
+            df = pd.read_csv(file)
         else:
-            logging.warning(f"PIN {pin} not found in database, skipping.")
-    conn.close()
+            df = pd.read_excel(file)
+        
+        required_columns = ["PIN (Roll.No)", "NAME", "BRANCH", "COURSE"]
+        if not all(col in df.columns for col in required_columns):
+            missing_cols = [col for col in required_columns if col not in df.columns]
+            flash(f"Sheet is missing required columns: {', '.join(missing_cols)}")
+            logging.warning(f"Sheet missing columns: {missing_cols}")
+            return redirect(url_for('trainer_dashboard', action='add'))
+        
+        conn = sqlite3.connect("database.db")
+        c = conn.cursor()
+        
+        c.execute('PRAGMA table_info(students)')
+        table_columns = [column[1] for column in c.fetchall()]
+        insert_columns = ['pin', 'name', 'branch', 'course', 'photo_path']
+        insert_values = [None]
+        if 'email' in table_columns:
+            insert_columns.append('email')
+            insert_values.append(None)
+        if 'resume_path' in table_columns:
+            insert_columns.append('resume_path')
+            insert_values.append(None)
+        
+        insert_sql = f"INSERT OR REPLACE INTO students ({', '.join(insert_columns)}) VALUES ({', '.join(['?' for _ in insert_columns])})"
+        
+        added_count = 0
+        
+        wb = openpyxl.load_workbook(EXCEL_PATH) if os.path.exists(EXCEL_PATH) else openpyxl.Workbook()
+        
+        for index, row in df.iterrows():
+            logging.info(f"Processing row {index + 2}: {row.tolist()}")
+            pin = str(row["PIN (Roll.No)"]).strip('"') if pd.notna(row["PIN (Roll.No)"]) else None
+            name = str(row["NAME"]) if pd.notna(row["NAME"]) else None
+            branch = str(row["BRANCH"]) if pd.notna(row["BRANCH"]) else None
+            course = str(row["COURSE"]) if pd.notna(row["COURSE"]) else "Default"
+            
+            if not pin or not name or not branch or not course:
+                logging.warning(f"Skipping row {index + 2} due to missing data: PIN={pin}, Name={name}, Branch={branch}, Course={course}")
+                continue
+            
+            c.execute(insert_sql, [pin, name, branch, course] + insert_values)
+            c.execute("INSERT OR IGNORE INTO users VALUES (?, ?, 'student')", (pin, "LOKESH"))
+            
+            sheet_name_to_use = course
+            if sheet_name_to_use not in wb.sheetnames:
+                ws = wb.create_sheet(sheet_name_to_use)
+                ws["A1"] = "PIN (Roll.No)"
+                ws["B1"] = "NAME"
+                ws["C1"] = "BRANCH"
+            ws = wb[sheet_name_to_use]
+            sheet_pin_map = {str(ws[f"A{row}"].value).strip('"'): row for row in range(2, ws.max_row + 1) if ws[f"A{row}"].value}
+            if pin not in sheet_pin_map:
+                next_row = ws.max_row + 1
+                ws[f"A{next_row}"] = pin
+                ws[f"B{next_row}"] = name
+                ws[f"C{next_row}"] = branch
+                added_count += 1
+        
+        wb.save(EXCEL_PATH)
+        conn.commit()
+        conn.close()
+        
+        if added_count > 0:
+            log_activity("Bulk Upload", f"Added {added_count} students via bulk upload")
+            flash(f"Successfully added {added_count} students")
+        else:
+            flash("No students were added. Check the file format or data.")
+    except Exception as e:
+        flash(f"Error processing file: {str(e)}")
+        logging.error(f"Error in bulk upload: {e}")
+    
+    return redirect(url_for('trainer_dashboard', action='add'))
 
-    if not valid_pins:
-        return jsonify({"status": "error", "message": "No valid pins found in database"}), 400
+# Idea #5: Attendance Correction Route
+@app.route('/correct_attendance', methods=['POST'])
+@login_required
+def correct_attendance():
+    if current_user.role != 'trainer':
+        return jsonify({"status": "error", "message": "Unauthorized"}), 403
+    
+    data = request.get_json()
+    pin = data.get('pin')
+    date = data.get('date')
+    new_status = data.get('status')
+    course = data.get('course')
+    
+    if not all([pin, date, new_status, course]):
+        return jsonify({"status": "error", "message": "Missing required fields"}), 400
+    
+    if new_status not in ["Present", "Absent"]:
+        return jsonify({"status": "error", "message": "Invalid status"}), 400
+    
+    if update_attendance(pin, date, new_status, course):
+        log_activity("Correct Attendance", f"Changed attendance for PIN {pin} on {date} to {new_status} in course {course}")
+        return jsonify({"status": "success", "message": f"Attendance updated to {new_status}"})
+    else:
+        return jsonify({"status": "error", "message": "Failed to update attendance"}), 500
 
-    # Update Excel attendance
-    excel_updated = update_excel(valid_pins)
-    if not excel_updated:
-        logging.warning("Excel update failed, but proceeding with Google Sheets update.")
+@app.route('/download_excel_today')
+@login_required
+def download_excel_today():
+    date_str = request.args.get('date', datetime.now().strftime("%d-%m-%Y"))
+    try:
+        date = datetime.strptime(date_str, "%d-%m-%Y")
+    except ValueError:
+        date = datetime.now()
+    
+    present_students, absent_students = get_excel_attendance(date)
+    if present_students is None or absent_students is None:
+        return "Error generating Excel file", 500
+    
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Attendance_{date_str}"
+    
+    headers = ["PIN", "Name", "Branch", "Course", "Status"]
+    for col, header in enumerate(headers, 1):
+        ws.cell(row=1, column=col, value=header)
+    
+    row = 2
+    for student in present_students:
+        ws.cell(row=row, column=1, value=student[0])
+        ws.cell(row=row, column=2, value=student[1])
+        ws.cell(row=row, column=3, value=student[2])
+        ws.cell(row=row, column=4, value=student[3])
+        ws.cell(row=row, column=5, value="Present")
+        row += 1
+    for student in absent_students:
+        ws.cell(row=row, column=1, value=student[0])
+        ws.cell(row=row, column=2, value=student[1])
+        ws.cell(row=row, column=3, value=student[2])
+        ws.cell(row=row, column=4, value=student[3])
+        ws.cell(row=row, column=5, value="Absent")
+        row += 1
+    
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    log_activity("Download Excel", f"Downloaded Excel for {date_str}")
+    return Response(output.getvalue(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    headers={"Content-Disposition": f"attachment;filename=excel_attendance_{date_str}.xlsx"})
 
-    # Update Google Sheets attendance
-    gsheets_updated = update_google_sheets(valid_pins)
+@app.route('/download_gsheets_today')
+@login_required
+def download_gsheets_today():
+    date_str = request.args.get('date', datetime.now().strftime("%d-%m-%Y"))
+    try:
+        date = datetime.strptime(date_str, "%d-%m-%Y")
+    except ValueError:
+        date = datetime.now()
+    
+    present_students, absent_students = get_gsheets_attendance(date)
+    if present_students is None or absent_students is None:
+        return "Error generating Excel file", 500
+    
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Attendance_{date_str}"
+    
+    headers = ["PIN", "Name", "Branch", "Status"]
+    for col, header in enumerate(headers, 1):
+        ws.cell(row=1, column=col, value=header)
+    
+    row = 2
+    for student in present_students:
+        ws.cell(row=row, column=1, value=student[0])
+        ws.cell(row=row, column=2, value=student[1])
+        ws.cell(row=row, column=3, value=student[2])
+        ws.cell(row=row, column=4, value="Present")
+        row += 1
+    for student in absent_students:
+        ws.cell(row=row, column=1, value=student[0])
+        ws.cell(row=row, column=2, value=student[1])
+        ws.cell(row=row, column=3, value=student[2])
+        ws.cell(row=row, column=4, value="Absent")
+        row += 1
+    
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    log_activity("Download GSheets", f"Downloaded GSheets for {date_str}")
+    return Response(output.getvalue(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    headers={"Content-Disposition": f"attachment;filename=gsheets_attendance_{date_str}.xlsx"})
 
-    # Log activity for each scan
-    for pin in valid_pins:
-        log_activity("Scan QR", f"Scanned PIN {pin} and marked present for today")
+@app.route('/download_excel_presentees')
+@login_required
+def download_excel_presentees():
+    if current_user.role != 'trainer':
+        flash("Only trainers can access this feature.", "error")
+        return redirect(url_for('trainer_dashboard'))
+    date_str = request.args.get('date', datetime.now().strftime("%d-%m-%Y"))
+    branch = request.args.get('branch')
+    course = request.args.get('course')
+    try:
+        date = datetime.strptime(date_str, "%d-%m-%Y")
+    except ValueError:
+        date = datetime.now()
+        flash("Invalid date format. Showing today’s data.")
+    
+    present_students, _ = get_excel_attendance(date, branch if branch else None, course if course else None)
+    if present_students is None:
+        return "Error generating Excel file", 500
+    
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Presentees_{date_str}"
+    
+    headers = ["PIN", "Name", "Branch", "Course", "Status"]
+    for col, header in enumerate(headers, 1):
+        ws.cell(row=1, column=col, value=header)
+    
+    row = 2
+    for student in present_students:
+        ws.cell(row=row, column=1, value=student[0])
+        ws.cell(row=row, column=2, value=student[1])
+        ws.cell(row=row, column=3, value=student[2])
+        ws.cell(row=row, column=4, value=student[3])
+        ws.cell(row=row, column=5, value="Present")
+        row += 1
+    
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    log_activity("Download Excel Presentees", f"Downloaded Excel for presentees on {date_str} (Branch: {branch}, Course: {course})")
+    return Response(output.getvalue(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    headers={"Content-Disposition": f"attachment;filename=presentees_{date_str}.xlsx"})
 
-    logging.info(f"Scanned PINs: {scanned_pins}")
+@app.route('/download_excel_absentees')
+@login_required
+def download_excel_absentees():
+    if current_user.role != 'trainer':
+        flash("Only trainers can access this feature.", "error")
+        return redirect(url_for('trainer_dashboard'))
+    date_str = request.args.get('date', datetime.now().strftime("%d-%m-%Y"))
+    branch = request.args.get('branch')
+    course = request.args.get('course')
+    try:
+        date = datetime.strptime(date_str, "%d-%m-%Y")
+    except ValueError:
+        date = datetime.now()
+        flash("Invalid date format. Showing today’s data.")
+    
+    _, absent_students = get_excel_attendance(date, branch if branch else None, course if course else None)
+    if absent_students is None:
+        return "Error generating Excel file", 500
+    
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = f"Absentees_{date_str}"
+    
+    headers = ["PIN", "Name", "Branch", "Course", "Status"]
+    for col, header in enumerate(headers, 1):
+        ws.cell(row=1, column=col, value=header)
+    
+    row = 2
+    for student in absent_students:
+        ws.cell(row=row, column=1, value=student[0])
+        ws.cell(row=row, column=2, value=student[1])
+        ws.cell(row=row, column=3, value=student[2])
+        ws.cell(row=row, column=4, value=student[3])
+        ws.cell(row=row, column=5, value="Absent")
+        row += 1
+    
+    output = io.BytesIO()
+    wb.save(output)
+    output.seek(0)
+    
+    log_activity("Download Excel Absentees", f"Downloaded Excel for absentees on {date_str} (Branch: {branch}, Course: {course})")
+    return Response(output.getvalue(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    headers={"Content-Disposition": f"attachment;filename=absentees_{date_str}.xlsx"})
 
-    return jsonify({
-        "status": "success",
-        "scanned": valid_pins,
-        "excel_updated": excel_updated,
-        "gsheets_updated": gsheets_updated
-    })
+@app.route('/student/generate_qr', methods=['GET'])
+@login_required
+def generate_qr_student():
+    if current_user.role != 'student':
+        return "Access denied: Only students can generate QR codes.", 403
+    
+    # Get student ID and current date
+    student_id = current_user.id  # Student’s unique ID
+    current_date = datetime.now().strftime("%Y-%m-%d")  # Format: YYYY-MM-DD (e.g., 2025-03-27)
+    
+    # Combine student ID and date for QR code data
+    qr_data = f"{student_id}-{current_date}"  # e.g., "12345-2025-03-27"
+    
+    # Generate QR code in memory
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    
+    img = qr.make_image(fill_color="black", back_color="white")
+    img_buffer = BytesIO()
+    img.save(img_buffer, format="PNG")
+    img_buffer.seek(0)
+    
+    return Response(img_buffer.getvalue(), mimetype='image/png')
 
-    # Debug: Print all pins in the database
-    conn = sqlite3.connect("database.db")
-    c = conn.cursor()
-    c.execute("SELECT pin FROM students")
-    all_pins = [row[0] for row in c.fetchall()]
-    logging.info(f"All PINs in DB: {all_pins}")
-    conn.close()
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+@app.route('/static/images/<filename>')
+def serve_image(filename):
+    return send_from_directory('static/images', filename)
+
+@app.route('/static/resumes/<filename>')
+def serve_resume(filename):
+    return send_from_directory('static/resumes', filename)
+
+@app.route('/static/videos/<filename>')
+def serve_video(filename):
+    return send_from_directory('static/videos', filename)
+
+@app.route('/static/sounds/<filename>')
+def serve_sound(filename):
+    return send_from_directory('static/sounds', filename)
+
+if __name__ == "__main__":
+    init_db()
+    os.makedirs("static/images", exist_ok=True)
+    os.makedirs("static/resumes", exist_ok=True)
+    os.makedirs("static/qr_codes", exist_ok=True)
+    os.makedirs("static/sounds", exist_ok=True)
+    # Log all registered endpoints for debugging
+    with app.test_request_context():
+        logging.info("Registered endpoints:")
+        for rule in app.url_map.iter_rules():
+            logging.info(f"Endpoint: {rule.endpoint}, URL: {rule}")
+    app.run(host='0.0.0.0', port=5000, debug=True)
