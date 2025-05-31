@@ -1,6 +1,6 @@
 /* General Styling with Background Image and Dark Mode */
 body {
-    background: url('/static/images/background.jpg') no-repeat center center fixed;
+    background: url('../images/background.jpg') no-repeat center center fixed;
     background-size: cover;
     min-height: 100vh;
     font-family: 'Arial', sans-serif;
