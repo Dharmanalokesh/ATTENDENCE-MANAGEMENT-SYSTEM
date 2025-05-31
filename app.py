@@ -13,21 +13,26 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import json
 from apscheduler.schedulers.background import BackgroundScheduler
-from flask import Flask, render_template, request, jsonify, send_from_directory, redirect, url_for, flash, Response
+from flask import Flask, render_template, request, jsonify, send_from_directory, redirect, url_for, flash, Response, make_response
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from zipfile import BadZipFile
+import qrcode
+from io import BytesIO
+import base64
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 app = Flask(__name__)
 app.secret_key = '8f42a9b1c3d5e7f9a1b2c3d4e5f67890'
+app.config['TEMPLATES_AUTO_RELOAD'] = True  # Enable template auto-reload for debugging
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "student_login"
 
-EXCEL_PATH = "attendance22.xlsx"
-ATTENDANCE_SHEET_PATH = "attendance_sheet.xlsx"
+EXCEL_PATH = "a.xlsx"
+ATTENDANCE_SHEET_PATH = "Attendence_data.xlsx"
+FEEDBACK_EXCEL_PATH = "static/feedback.xlsx"
 GOOGLE_SHEET_NAME = "Attendance_Tracker"
 CREDENTIALS_PATH = "credentials.json"
 CONFIG_PATH = "config.json"
@@ -74,37 +79,67 @@ def init_db():
                  branch TEXT,
                  course TEXT,
                  photo_path TEXT,
-                 email TEXT)''')  # Added email for Idea #3
+                 email TEXT,
+                 resume_path TEXT)''')
     c.execute('''CREATE TABLE IF NOT EXISTS activity_log (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  timestamp TEXT,
                  action TEXT,
                  details TEXT)''')
+    c.execute('''CREATE TABLE IF NOT EXISTS feedback (
+                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 pin TEXT,
+                 comment TEXT,
+                 date TEXT)''')
     c.execute("INSERT OR IGNORE INTO users VALUES ('trainer1', 'pass456', 'trainer')")
     
-    c.execute('''CREATE TABLE IF NOT EXISTS feedback (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
-             pin TEXT,
-             comment TEXT,
-             date TEXT)''')
+
+    
+    # Check and add email and resume_path columns if missing
+    c.execute('PRAGMA table_info(students)')
+    columns = [column[1] for column in c.fetchall()]
+    if 'email' not in columns:
+        c.execute('ALTER TABLE students ADD COLUMN email TEXT')
+        logging.info("Added 'email' column to students table")
+    if 'resume_path' not in columns:
+        c.execute('ALTER TABLE students ADD COLUMN resume_path TEXT')
+        logging.info("Added 'resume_path' column to students table")
     
     try:
-        excel_data = pd.ExcelFile(EXCEL_PATH)
-        for sheet_name in excel_data.sheet_names:
-            df = excel_data.parse(sheet_name)
-            required_columns = ["PIN (Roll.No)", "NAME", "BRANCH"]
-            if not all(col in df.columns for col in required_columns):
-                logging.error(f"Sheet '{sheet_name}' missing required columns: {required_columns}")
-                continue
-            for _, row in df.iterrows():
-                pin = str(row["PIN (Roll.No)"]).strip('"')
-                name = row["NAME"]
-                branch = row["BRANCH"]
-                c.execute("INSERT OR IGNORE INTO users VALUES (?, ?, 'student')", (pin, "LOKESH"))
-                c.execute("INSERT OR IGNORE INTO students VALUES (?, ?, ?, ?, ?, ?)",
-                          (pin, name, branch, sheet_name, f"static/images/{pin}.jpg", None))
+        if os.path.exists(EXCEL_PATH):
+            excel_data = pd.ExcelFile(EXCEL_PATH)
+            total_students_processed = 0
+            for sheet_name in excel_data.sheet_names:
+                df = excel_data.parse(sheet_name)
+                required_columns = ["PIN (Roll.No)", "NAME", "BRANCH"]
+                if not all(col in df.columns for col in required_columns):
+                    logging.warning(f"Sheet '{sheet_name}' missing required columns: {required_columns}. Skipping.")
+                    continue
+                sheet_students = 0
+                sheet_skipped = 0
+                for index, row in df.iterrows():
+                    pin = str(row["PIN (Roll.No)"]).strip('"') if pd.notna(row["PIN (Roll.No)"]) else None
+                    name = str(row["NAME"]) if pd.notna(row["NAME"]) else None
+                    branch = str(row["BRANCH"]) if pd.notna(row["BRANCH"]) else None
+                    course = sheet_name
+                    if not pin or not name or not branch:
+                        logging.warning(f"Skipping row {index + 2} in sheet '{sheet_name}' due to missing data: PIN={pin}, Name={name}, Branch={branch}")
+                        sheet_skipped += 1
+                        continue
+                    insert_values = [pin, name, branch, course, f"static/images/{pin}.jpg", None, None]
+                    c.execute(f"INSERT OR IGNORE INTO students (pin, name, branch, course, photo_path, email, resume_path) VALUES (?, ?, ?, ?, ?, ?, ?)", insert_values)
+                    c.execute("INSERT OR IGNORE INTO users VALUES (?, ?, 'student')", (pin, "LOKESH"))
+                    sheet_students += 1
+                    logging.info(f"Added student {name} (PIN: {pin}) from sheet '{sheet_name}'")
+                total_students_processed += sheet_students
+                logging.info(f"Processed sheet '{sheet_name}': {sheet_students} students added, {sheet_skipped} rows skipped.")
+            c.execute("SELECT COUNT(*) FROM students")
+            final_count = c.fetchone()[0]
+            logging.info(f"Total students in database after initialization: {final_count}")
+        else:
+            logging.warning(f"{EXCEL_PATH} not found during initialization. Skipping student import.")
     except Exception as e:
-        logging.warning(f"{EXCEL_PATH} not found or corrupted during init: {e}. Skipping student import.")
+        logging.error(f"{EXCEL_PATH} not found or corrupted during init: {e}. Skipping student import.")
     conn.commit()
     conn.close()
 
@@ -120,7 +155,7 @@ def load_user(username):
     return None
 
 try:
-    excel_data = pd.ExcelFile(EXCEL_PATH)
+    excel_data = pd.ExcelFile(EXCEL_PATH) if os.path.exists(EXCEL_PATH) else None
 except Exception as e:
     logging.warning(f"Failed to load {EXCEL_PATH} at startup: {e}")
     excel_data = None
@@ -190,6 +225,24 @@ def get_recent_activity():
     activities = c.fetchall()
     conn.close()
     return activities
+
+# Function to append feedback to feedback.xlsx
+def append_feedback_to_excel(pin, comment, date):
+    feedback_data = {
+        'PIN': pin,
+        'Comment': comment,
+        'Date': date
+    }
+    try:
+        if os.path.exists(FEEDBACK_EXCEL_PATH):
+            df = pd.read_excel(FEEDBACK_EXCEL_PATH)
+            df = pd.concat([df, pd.DataFrame([feedback_data])], ignore_index=True)
+        else:
+            df = pd.DataFrame([feedback_data])
+        df.to_excel(FEEDBACK_EXCEL_PATH, index=False)
+        logging.info(f"Appended feedback to {FEEDBACK_EXCEL_PATH} for PIN {pin}")
+    except Exception as e:
+        logging.error(f"Error writing to {FEEDBACK_EXCEL_PATH}: {e}")
 
 # Idea #3: Email Sending Function
 def send_email(to_email, subject, body):
@@ -270,10 +323,12 @@ scheduler.add_job(check_absent_students, 'interval', days=1, start_date=datetime
 scheduler.start()
 
 def update_excel(scanned_pins):
+    logging.info(f"Starting update_excel with scanned_pins: {scanned_pins}")
     try:
         wb = openpyxl.load_workbook(ATTENDANCE_SHEET_PATH) if os.path.exists(ATTENDANCE_SHEET_PATH) else openpyxl.Workbook()
         if not wb.sheetnames:
             wb.remove(wb.active)
+            logging.warning(f"No sheets found in {ATTENDANCE_SHEET_PATH}, creating new workbook.")
     except Exception as e:
         logging.error(f"Failed to load {ATTENDANCE_SHEET_PATH}: {e}. Creating new workbook.")
         wb = openpyxl.Workbook()
@@ -281,6 +336,7 @@ def update_excel(scanned_pins):
     
     today_date = datetime.now().strftime("%d-%m-%Y")
     scanned_pins_set = set(scanned_pins)
+    logging.info(f"Processing attendance for date: {today_date} with {len(scanned_pins_set)} unique pins")
     
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
@@ -317,8 +373,8 @@ def update_excel(scanned_pins):
         if not date_col:
             date_col = ws.max_column + 1 if ws.max_column >= 4 else 4
             ws.cell(row=1, column=date_col).value = today_date
+            logging.info(f"Added new date column {today_date} at column {date_col} in sheet {course}")
         
-        # Only update the current day's column, don't touch previous columns
         sheet_pin_map = {str(ws[f"A{row}"].value).strip('"'): row for row in range(2, ws.max_row + 1) if ws[f"A{row}"].value}
         for pin, name, branch in students:
             if pin not in sheet_pin_map:
@@ -332,18 +388,21 @@ def update_excel(scanned_pins):
             pin = str(ws[f"A{row}"].value).strip('"') if ws[f"A{row}"].value else ""
             if pin:
                 cell = ws.cell(row=row, column=date_col)
-                # Only update the current day's status
                 if pin in scanned_pins_set:
                     cell.value = "Present"
+                    logging.info(f"Marked {pin} as Present in {course} for {today_date}")
                 else:
-                    # Only set to "Absent" if the cell is empty for today
                     if not cell.value:
                         cell.value = "Absent"
+                        logging.info(f"Marked {pin} as Absent in {course} for {today_date}")
     
     try:
         wb.save(ATTENDANCE_SHEET_PATH)
-        logging.info(f"Updated {ATTENDANCE_SHEET_PATH} with {len(scanned_pins)} new scans for {today_date}")
+        logging.info(f"Successfully updated {ATTENDANCE_SHEET_PATH} with {len(scanned_pins)} new scans for {today_date}")
         return True
+    except PermissionError as e:
+        logging.error(f"Permission denied while saving {ATTENDANCE_SHEET_PATH}: {e}. Ensure file is not open.")
+        return False
     except Exception as e:
         logging.error(f"Failed to save {ATTENDANCE_SHEET_PATH}: {e}")
         return False
@@ -518,36 +577,72 @@ def update_attendance(pin, date, new_status, course):
         logging.error(f"Failed to update Google Sheets attendance for PIN {pin}: {e}")
         return False
 
-def get_excel_attendance(date):
+def get_excel_attendance(date, branch=None, course=None):
     date_str = date.strftime("%d-%m-%Y")
     present_students = []
     absent_students = []
     
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+    query = "SELECT pin, name, branch, course FROM students"
+    params = []
+    if branch and course:
+        query += " WHERE UPPER(branch) = UPPER(?) AND UPPER(course) = UPPER(?)"
+        params = [branch, course]
+    elif branch:
+        query += " WHERE UPPER(branch) = UPPER(?)"
+        params = [branch]
+    elif course:
+        query += " WHERE UPPER(course) = UPPER(?)"
+        params = [course]
+    c.execute(query, params)
+    all_students = {row[0]: (row[1], row[2], row[3]) for row in c.fetchall()}
+    
     if not os.path.exists(ATTENDANCE_SHEET_PATH):
         logging.error(f"{ATTENDANCE_SHEET_PATH} not found.")
-        return [], []
+        for pin, (name, branch, course) in all_students.items():
+            absent_students.append((pin, name, branch, course))
+        conn.close()
+        return present_students, absent_students
     
     try:
         wb = openpyxl.load_workbook(ATTENDANCE_SHEET_PATH)
+        marked_students = set()
         for sheet_name in wb.sheetnames:
+            if course and sheet_name.upper() != course.upper():
+                continue
             ws = wb[sheet_name]
             date_col = get_excel_date_column(ws, date_str)
             if date_col:
                 for row in range(2, ws.max_row + 1):
                     pin = str(ws[f"A{row}"].value).strip('"') if ws[f"A{row}"].value else ""
                     name = ws[f"B{row}"].value or "Unknown"
-                    branch = ws[f"C{row}"].value or "Unknown"
+                    branch_val = ws[f"C{row}"].value or "Unknown"
+                    if branch and branch_val.upper() != branch.upper():
+                        continue
                     status = ws.cell(row=row, column=date_col).value
                     if pin and status:
+                        marked_students.add(pin)
                         if status == "Present":
-                            present_students.append((pin, name, branch, sheet_name))
+                            present_students.append((pin, name, branch_val, sheet_name))
                         elif status == "Absent":
-                            absent_students.append((pin, name, branch, sheet_name))
+                            absent_students.append((pin, name, branch_val, sheet_name))
         wb.close()
     except Exception as e:
         logging.error(f"Error fetching Excel attendance for {date_str}: {e}")
+        conn.close()
         return [], []
-    
+
+    for pin, (name, branch, course) in all_students.items():
+        if branch and branch.upper() != branch.upper():
+            continue
+        if course and course.upper() != course.upper():
+            continue
+        if pin not in marked_students:
+            absent_students.append((pin, name, branch, course))
+
+    conn.close()
+    logging.info(f"get_excel_attendance for {date_str} (Branch: {branch}, Course: {course}) - Present: {len(present_students)}, Absent: {len(absent_students)}")
     return present_students, absent_students
 
 def get_gsheets_attendance(date):
@@ -629,7 +724,7 @@ def get_dashboard_stats():
         present_today = len(present_students)
         absent_today = len(absent_students)
     
-    percentage = (present_today / (present_today + absent_today) * 100) if (present_today + absent_today) > 0 else 0
+    percentage = (present_today / total_students * 100) if total_students > 0 else 0
     return total_students, present_today, absent_today, round(percentage, 2), missing_photos
 
 @app.route('/')
@@ -684,7 +779,7 @@ def student_dashboard():
     
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
-    c.execute("SELECT pin, name, branch, course, photo_path FROM students WHERE pin = ?", (current_user.id,))
+    c.execute("SELECT pin, name, branch, course, photo_path, resume_path FROM students WHERE pin = ?", (current_user.id,))
     student = c.fetchone()
     conn.close()
     
@@ -728,6 +823,43 @@ def student_dashboard():
                            present_days=present_days, absent_days=absent_days, total_days=total_days,
                            recent_history=recent_history, low_attendance=low_attendance)
 
+
+@app.route('/upload_resume', methods=['POST'])
+@login_required
+def upload_resume():
+    if current_user.role != 'student':
+        return jsonify({"status": "error", "message": "Unauthorized"}), 403
+    
+    if 'resume' not in request.files:
+        flash("No file uploaded", "error")
+        return redirect(url_for('student_dashboard'))
+    
+    resume = request.files['resume']
+    if resume.filename == '':
+        flash("No file selected", "error")
+        return redirect(url_for('student_dashboard'))
+    
+    if not resume.filename.endswith('.pdf'):
+        flash("Only PDF files are allowed", "error")
+        return redirect(url_for('student_dashboard'))
+    
+    resume_path = f"static/resumes/{current_user.id}.pdf"
+    os.makedirs("static/resumes", exist_ok=True)
+    try:
+        resume.save(resume_path)
+        conn = sqlite3.connect("database.db")
+        c = conn.cursor()
+        c.execute("UPDATE students SET resume_path = ? WHERE pin = ?", (resume_path, current_user.id))
+        conn.commit()
+        conn.close()
+        log_activity("Upload Resume", f"Student {current_user.id} uploaded a resume")
+        flash("Resume uploaded successfully!", "success")
+    except Exception as e:
+        logging.error(f"Failed to upload resume for {current_user.id}: {e}")
+        flash("Failed to upload resume", "error")
+    
+    return redirect(url_for('student_dashboard'))
+
 @app.route('/submit_feedback', methods=['POST'])
 @login_required
 def submit_feedback():
@@ -736,6 +868,9 @@ def submit_feedback():
         return redirect(url_for('trainer_dashboard'))
     try:
         comment = request.form['comment']
+        if not comment.strip():
+            flash("Feedback cannot be empty.", "error")
+            return redirect(url_for('student_dashboard'))
         date = datetime.now().strftime('%Y-%m-%d')
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
@@ -744,6 +879,7 @@ def submit_feedback():
         c.execute("INSERT INTO activity_log (timestamp, action, details) VALUES (?, ?, ?)",
                   (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "Feedback Submitted", f"Student {current_user.id} submitted feedback"))
         conn.commit()
+        append_feedback_to_excel(current_user.id, comment, date)
         flash("Feedback submitted successfully!", "success")
     except Exception as e:
         flash(f"Error submitting feedback: {str(e)}", "error")
@@ -774,7 +910,6 @@ def review_feedback():
     try:
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
-        import os
         logging.info(f"Connected to database: {os.path.abspath('database.db')}")
         c.execute("SELECT pin, comment, date FROM feedback ORDER BY date DESC")
         feedbacks = c.fetchall()
@@ -791,6 +926,20 @@ def review_feedback():
         conn.close()
     return render_template('trainer_dashboard.html', action='review_feedback', feedbacks=feedbacks)
 
+@app.route('/download_feedback_excel')
+@login_required
+def download_feedback_excel():
+    if current_user.role != 'trainer':
+        flash("Only trainers can access this feature.", "error")
+        return redirect(url_for('trainer_dashboard'))
+    
+    if not os.path.exists(FEEDBACK_EXCEL_PATH):
+        flash("No feedback data available to download.", "warning")
+        return redirect(url_for('trainer_dashboard', action='review_feedback'))
+    
+    log_activity("Download Feedback Excel", "Downloaded feedback.xlsx")
+    return send_from_directory('static', 'feedback.xlsx', as_attachment=True, download_name='feedback.xlsx')
+
 @app.route('/trainer_dashboard', methods=['GET', 'POST'])
 @login_required
 def trainer_dashboard():
@@ -801,7 +950,7 @@ def trainer_dashboard():
     total_students, present_today, absent_today, percentage_today, missing_photos = get_dashboard_stats()
     recent_activity = get_recent_activity()
     default_date = datetime.now().strftime('%Y-%m-%d')
-    reminders_enabled = config["reminders_enabled"]  # Idea #3: Pass to template
+    reminders_enabled = config["reminders_enabled"]
     
     if action == 'search':
         conn = sqlite3.connect("database.db")
@@ -825,66 +974,121 @@ def trainer_dashboard():
                               missing_photos=missing_photos, recent_activity=recent_activity,
                               default_date=default_date, reminders_enabled=reminders_enabled)
     
-    elif action == 'today_excel':
-        date_str = request.args.get('date', default_date)
-        try:
-            date = datetime.strptime(date_str, "%Y-%m-%d")
-        except ValueError:
-            date = datetime.now()
-            flash("Invalid date format. Showing today’s data.")
+    elif action == 'student_resumes':
+        conn = sqlite3.connect("database.db")
+        c = conn.cursor()
+        pin_search = request.args.get('pin_search', '').strip()
         
-        selected_branch = request.args.get('branch', 'all')
-        selected_course = request.args.get('course', 'all')
+        if pin_search:
+            c.execute("SELECT pin, name, branch, course, resume_path FROM students WHERE resume_path IS NOT NULL AND pin LIKE ? ORDER BY pin",
+                      (f'%{pin_search}%',))
+        else:
+            c.execute("SELECT pin, name, branch, course, resume_path FROM students WHERE resume_path IS NOT NULL ORDER BY pin")
         
-        present_students, absent_students = get_excel_attendance(date)
-        if present_students is None or absent_students is None:
-            flash("Error fetching Excel attendance data. Ensure the Excel file exists and is accessible.")
-            present_students, absent_students = [], []
-        
-        if selected_branch != 'all':
-            present_students = [student for student in present_students if student[2] == selected_branch]
-            absent_students = [student for student in absent_students if student[2] == selected_branch]
-        
-        if selected_course != 'all':
-            present_students = [student for student in present_students if student[3] == selected_course]
-            absent_students = [student for student in absent_students if student[3] == selected_course]
-        
-        branches = ['all', 'ECE', 'CSE', 'CSC', 'EEE', 'CSM', 'CSD']
-        courses = ['all', 'AWS&JAVA', 'GENAI', 'REDHAT&AWS', 'JFS&UIUX']
-        
-        return render_template('trainer_dashboard.html', action=action, 
-                              present_students=present_students, absent_students=absent_students,
-                              selected_date=date.strftime("%d-%m-%Y"),
-                              total_students=total_students, present_today=present_today, 
-                              absent_today=absent_today, percentage_today=percentage_today, 
-                              missing_photos=missing_photos, recent_activity=recent_activity,
-                              default_date=default_date, branches=branches, courses=courses,
-                              selected_branch=selected_branch, selected_course=selected_course,
-                              reminders_enabled=reminders_enabled)
-    
-    elif action == 'today_gsheets':
-        date_str = request.args.get('date', default_date)
-        try:
-            date = datetime.strptime(date_str, "%Y-%m-%d")
-        except ValueError:
-            date = datetime.now()
-            flash("Invalid date format. Showing today’s data.")
-        present_students, absent_students = get_gsheets_attendance(date)
-        if present_students is None or absent_students is None:
-            flash("Error fetching Google Sheets attendance data. Check credentials and connectivity.")
-        return render_template('trainer_dashboard.html', action=action, 
-                              present_students=present_students, absent_students=absent_students,
-                              selected_date=date.strftime("%d-%m-%Y"),
+        students_with_resumes = c.fetchall()
+        conn.close()
+        return render_template('trainer_dashboard.html', action=action, students_with_resumes=students_with_resumes,
                               total_students=total_students, present_today=present_today, 
                               absent_today=absent_today, percentage_today=percentage_today, 
                               missing_photos=missing_photos, recent_activity=recent_activity,
                               default_date=default_date, reminders_enabled=reminders_enabled)
     
-    return render_template('trainer_dashboard.html', action=action,
+    elif action == 'today_excel':
+        date_str = request.args.get('date', default_date)
+        try:
+            date = datetime.strptime(date_str, "%Y-%m-%d")
+            selected_date = date.strftime("%d-%m-%Y")
+        except ValueError:
+            date = datetime.now()
+            selected_date = date.strftime("%d-%m-%Y")
+            flash("Invalid date format. Showing today’s data.")
+        
+        selected_branch = request.args.get('branch', 'all')
+        selected_course = request.args.get('course', 'all')
+        
+        present_students, absent_students = get_excel_attendance(date, 
+                                                               selected_branch if selected_branch != 'all' else None, 
+                                                               selected_course if selected_course != 'all' else None)
+        if present_students is None or absent_students is None:
+            flash("Error fetching Excel attendance data. Ensure the Excel file exists and is accessible.")
+            present_students, absent_students = [], []
+            
+        
+        conn = sqlite3.connect("database.db")
+        c = conn.cursor()
+        query = "SELECT COUNT(*) FROM students"
+        params = []
+        if selected_branch != 'all' and selected_course != 'all':
+            query += " WHERE UPPER(branch) = UPPER(?) AND UPPER(course) = UPPER(?)"
+            params = [selected_branch, selected_course]
+        elif selected_branch != 'all':
+            query += " WHERE UPPER(branch) = UPPER(?)"
+            params = [selected_branch]
+        elif selected_course != 'all':
+            query += " WHERE UPPER(course) = UPPER(?)"
+            params = [selected_course]
+        c.execute(query, params)
+        total_filtered_students = c.fetchone()[0]
+        logging.info(f"Query: {query} with params {params} returned total_filtered_students: {total_filtered_students}")
+        conn.close()
+        
+        present_count = len(present_students)
+        absent_count = len(absent_students)
+        percentage_filtered = (present_count / total_filtered_students * 100) if total_filtered_students > 0 else 0
+    
+        branches = ['all', 'ECE', 'CSE', 'CSC', 'EEE', 'CSM', 'CSD', "IT"]
+        courses = ['all', 'AWS&JAVA', 'GENAI', 'REDHAT&AWS', 'JFS&UIUX', "JFS"]
+        
+        logging.info(f"Rendering today_excel with selected_date: {selected_date}, present_students: {len(present_students)}, absent_students: {len(absent_students)}")
+        response = make_response(render_template('trainer_dashboard.html', action=action, 
+                              present_students=present_students, absent_students=absent_students,
+                              selected_date=selected_date,
+                              total_students=total_students, present_today=present_today, 
+                              absent_today=absent_today, percentage_today=percentage_today, 
+                              missing_photos=missing_photos, recent_activity=recent_activity,
+                              default_date=default_date, branches=branches, courses=courses,
+                              selected_branch=selected_branch, selected_course=selected_course,
+                              reminders_enabled=reminders_enabled,
+                              total_filtered_students=total_filtered_students,
+                              present_count=present_count,
+                              absent_count=absent_count,
+                              percentage_filtered=percentage_filtered))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+        return response
+    
+    elif action == 'today_gsheets':
+        date_str = request.args.get('date', default_date)
+        try:
+            date = datetime.strptime(date_str, "%Y-%m-%d")
+            selected_date = date.strftime("%d-%m-%Y")
+        except ValueError:
+            date = datetime.now()
+            selected_date = date.strftime("%d-%m-%Y")
+            flash("Invalid date format. Showing today’s data.")
+        
+        present_students, absent_students = get_gsheets_attendance(date)
+        if present_students is None or absent_students is None:
+            flash("Error fetching Google Sheets attendance data. Check credentials and connectivity.")
+            present_students, absent_students = [], []
+        
+        logging.info(f"Rendering today_gsheets with selected_date: {selected_date}, present_students: {len(present_students)}, absent_students: {len(absent_students)}")
+        response = make_response(render_template('trainer_dashboard.html', action=action, 
+                              present_students=present_students, absent_students=absent_students,
+                              selected_date=selected_date,
+                              total_students=total_students, present_today=present_today, 
+                              absent_today=absent_today, percentage_today=percentage_today, 
+                              missing_photos=missing_photos, recent_activity=recent_activity,
+                              default_date=default_date, reminders_enabled=reminders_enabled))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+        return response
+    
+    response = make_response(render_template('trainer_dashboard.html', action=action,
                           total_students=total_students, present_today=present_today, 
                           absent_today=absent_today, percentage_today=percentage_today, 
                           missing_photos=missing_photos, recent_activity=recent_activity,
-                          default_date=default_date, reminders_enabled=reminders_enabled)
+                          default_date=default_date, reminders_enabled=reminders_enabled))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    return response
 
 @app.route('/scan', methods=['POST'])
 @login_required
@@ -896,13 +1100,32 @@ def scan():
     scanned_pins = data.get('scanned_pins', [])
     
     if scanned_pins:
+        logging.info(f"Received scanned pins: {scanned_pins}")
         try:
-            update_excel(scanned_pins)
-            update_google_sheets(scanned_pins)
+            valid_pins = []
+            conn = sqlite3.connect("database.db")
+            c = conn.cursor()
             for pin in scanned_pins:
+                c.execute("SELECT pin FROM students WHERE pin = ?", (str(pin).strip('"'),))
+                if c.fetchone():
+                    valid_pins.append(str(pin).strip('"'))
+                else:
+                    logging.warning(f"PIN {pin} not found in database, skipping.")
+            conn.close()
+
+            if not valid_pins:
+                return jsonify({"status": "error", "message": "No valid pins found in database"}), 400
+
+            excel_updated = update_excel(valid_pins)
+            if not excel_updated:
+                logging.warning("Excel update failed, but proceeding with Google Sheets update.")
+            
+            gsheets_updated = update_google_sheets(valid_pins)
+            
+            for pin in valid_pins:
                 log_activity("Scan QR", f"Scanned PIN {pin}")
-            logging.info(f"Scanned PINs: {scanned_pins}")
-            return jsonify({"status": "success", "scanned": scanned_pins})
+            logging.info(f"Processed valid PINs: {valid_pins}")
+            return jsonify({"status": "success", "scanned": valid_pins, "excel_updated": excel_updated, "gsheets_updated": gsheets_updated})
         except Exception as e:
             logging.error(f"Failed to process scan: {e}")
             return jsonify({"status": "error", "message": f"Error processing scan: {str(e)}"}), 500
@@ -918,7 +1141,7 @@ def add_student():
     name = request.form['name']
     branch = request.form['branch']
     course = request.form['course']
-    email = request.form['email']  # Idea #3: Added email field
+    email = request.form.get('email', None)
     
     if 'photo' not in request.files:
         return jsonify({"status": "error", "message": "No photo uploaded"}), 400
@@ -936,8 +1159,17 @@ def add_student():
     
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
-    c.execute("INSERT OR REPLACE INTO students (pin, name, branch, course, photo_path, email) VALUES (?, ?, ?, ?, ?, ?)",
-              (pin, name, branch, course, photo_path, email))
+    c.execute('PRAGMA table_info(students)')
+    columns = [column[1] for column in c.fetchall()]
+    insert_columns = ['pin', 'name', 'branch', 'course', 'photo_path']
+    insert_values = [pin, name, branch, course, photo_path]
+    if 'email' in columns and email:
+        insert_columns.append('email')
+        insert_values.append(email)
+    if 'resume_path' in columns:
+        insert_columns.append('resume_path')
+        insert_values.append(None)
+    c.execute(f"INSERT OR REPLACE INTO students ({', '.join(insert_columns)}) VALUES ({', '.join(['?' for _ in insert_columns])})", insert_values)
     c.execute("INSERT OR IGNORE INTO users VALUES (?, ?, 'student')", (pin, "LOKESH"))
     conn.commit()
     conn.close()
@@ -970,58 +1202,75 @@ def bulk_upload_students():
     
     if 'file' not in request.files:
         flash("No file uploaded")
+        logging.warning("No file uploaded")
         return redirect(url_for('trainer_dashboard', action='add'))
     
     file = request.files['file']
     if file.filename == '':
         flash("No file selected")
+        logging.warning("No file selected")
         return redirect(url_for('trainer_dashboard', action='add'))
     
     if not (file.filename.endswith('.csv') or file.filename.endswith('.xlsx')):
         flash("Invalid file format. Please upload a CSV or Excel file.")
+        logging.warning("Invalid file format")
         return redirect(url_for('trainer_dashboard', action='add'))
     
     try:
+        logging.info(f"Processing file: {file.filename}")
         if file.filename.endswith('.csv'):
             df = pd.read_csv(file)
         else:
             df = pd.read_excel(file)
         
-        required_columns = ["PIN (Roll.No)", "NAME", "BRANCH", "COURSE", "EMAIL"]
+        required_columns = ["PIN (Roll.No)", "NAME", "BRANCH", "COURSE"]
         if not all(col in df.columns for col in required_columns):
-            flash(f"File must contain columns: {', '.join(required_columns)}")
+            missing_cols = [col for col in required_columns if col not in df.columns]
+            flash(f"Sheet is missing required columns: {', '.join(missing_cols)}")
+            logging.warning(f"Sheet missing columns: {missing_cols}")
             return redirect(url_for('trainer_dashboard', action='add'))
         
         conn = sqlite3.connect("database.db")
         c = conn.cursor()
+        
+        c.execute('PRAGMA table_info(students)')
+        table_columns = [column[1] for column in c.fetchall()]
+        insert_columns = ['pin', 'name', 'branch', 'course', 'photo_path']
+        insert_values = [None]
+        if 'email' in table_columns:
+            insert_columns.append('email')
+            insert_values.append(None)
+        if 'resume_path' in table_columns:
+            insert_columns.append('resume_path')
+            insert_values.append(None)
+        
+        insert_sql = f"INSERT OR REPLACE INTO students ({', '.join(insert_columns)}) VALUES ({', '.join(['?' for _ in insert_columns])})"
+        
         added_count = 0
         
         wb = openpyxl.load_workbook(EXCEL_PATH) if os.path.exists(EXCEL_PATH) else openpyxl.Workbook()
         
-        for _, row in df.iterrows():
-            pin = str(row["PIN (Roll.No)"]).strip('"')
-            name = row["NAME"]
-            branch = row["BRANCH"]
-            course = row["COURSE"]
-            email = row["EMAIL"]
+        for index, row in df.iterrows():
+            logging.info(f"Processing row {index + 2}: {row.tolist()}")
+            pin = str(row["PIN (Roll.No)"]).strip('"') if pd.notna(row["PIN (Roll.No)"]) else None
+            name = str(row["NAME"]) if pd.notna(row["NAME"]) else None
+            branch = str(row["BRANCH"]) if pd.notna(row["BRANCH"]) else None
+            course = str(row["COURSE"]) if pd.notna(row["COURSE"]) else "Default"
             
-            # Skip if email is missing or invalid (basic validation)
-            if not isinstance(email, str) or '@' not in email:
+            if not pin or not name or not branch or not course:
+                logging.warning(f"Skipping row {index + 2} due to missing data: PIN={pin}, Name={name}, Branch={branch}, Course={course}")
                 continue
             
-            # Add to database
-            c.execute("INSERT OR REPLACE INTO students (pin, name, branch, course, photo_path, email) VALUES (?, ?, ?, ?, ?, ?)",
-                      (pin, name, branch, course, None, email))
+            c.execute(insert_sql, [pin, name, branch, course] + insert_values)
             c.execute("INSERT OR IGNORE INTO users VALUES (?, ?, 'student')", (pin, "LOKESH"))
             
-            # Add to attendance22.xlsx
-            sheet_name = course
-            if sheet_name not in wb.sheetnames:
-                ws = wb.create_sheet(sheet_name)
+            sheet_name_to_use = course
+            if sheet_name_to_use not in wb.sheetnames:
+                ws = wb.create_sheet(sheet_name_to_use)
                 ws["A1"] = "PIN (Roll.No)"
                 ws["B1"] = "NAME"
                 ws["C1"] = "BRANCH"
-            ws = wb[sheet_name]
+            ws = wb[sheet_name_to_use]
             sheet_pin_map = {str(ws[f"A{row}"].value).strip('"'): row for row in range(2, ws.max_row + 1) if ws[f"A{row}"].value}
             if pin not in sheet_pin_map:
                 next_row = ws.max_row + 1
@@ -1034,8 +1283,11 @@ def bulk_upload_students():
         conn.commit()
         conn.close()
         
-        log_activity("Bulk Upload", f"Added {added_count} students via bulk upload")
-        flash(f"Successfully added {added_count} students")
+        if added_count > 0:
+            log_activity("Bulk Upload", f"Added {added_count} students via bulk upload")
+            flash(f"Successfully added {added_count} students")
+        else:
+            flash("No students were added. Check the file format or data.")
     except Exception as e:
         flash(f"Error processing file: {str(e)}")
         logging.error(f"Error in bulk upload: {e}")
@@ -1053,7 +1305,7 @@ def correct_attendance():
     pin = data.get('pin')
     date = data.get('date')
     new_status = data.get('status')
-    course = data.get('course')  # Course is now passed from the frontend
+    course = data.get('course')
     
     if not all([pin, date, new_status, course]):
         return jsonify({"status": "error", "message": "Missing required fields"}), 400
@@ -1162,13 +1414,15 @@ def download_excel_presentees():
         flash("Only trainers can access this feature.", "error")
         return redirect(url_for('trainer_dashboard'))
     date_str = request.args.get('date', datetime.now().strftime("%d-%m-%Y"))
+    branch = request.args.get('branch')
+    course = request.args.get('course')
     try:
         date = datetime.strptime(date_str, "%d-%m-%Y")
     except ValueError:
         date = datetime.now()
         flash("Invalid date format. Showing today’s data.")
     
-    present_students, _ = get_excel_attendance(date)
+    present_students, _ = get_excel_attendance(date, branch if branch else None, course if course else None)
     if present_students is None:
         return "Error generating Excel file", 500
     
@@ -1193,7 +1447,7 @@ def download_excel_presentees():
     wb.save(output)
     output.seek(0)
     
-    log_activity("Download Excel Presentees", f"Downloaded Excel for presentees on {date_str}")
+    log_activity("Download Excel Presentees", f"Downloaded Excel for presentees on {date_str} (Branch: {branch}, Course: {course})")
     return Response(output.getvalue(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     headers={"Content-Disposition": f"attachment;filename=presentees_{date_str}.xlsx"})
 
@@ -1204,13 +1458,15 @@ def download_excel_absentees():
         flash("Only trainers can access this feature.", "error")
         return redirect(url_for('trainer_dashboard'))
     date_str = request.args.get('date', datetime.now().strftime("%d-%m-%Y"))
+    branch = request.args.get('branch')
+    course = request.args.get('course')
     try:
         date = datetime.strptime(date_str, "%d-%m-%Y")
     except ValueError:
         date = datetime.now()
         flash("Invalid date format. Showing today’s data.")
     
-    _, absent_students = get_excel_attendance(date)
+    _, absent_students = get_excel_attendance(date, branch if branch else None, course if course else None)
     if absent_students is None:
         return "Error generating Excel file", 500
     
@@ -1235,9 +1491,34 @@ def download_excel_absentees():
     wb.save(output)
     output.seek(0)
     
-    log_activity("Download Excel Absentees", f"Downloaded Excel for absentees on {date_str}")
+    log_activity("Download Excel Absentees", f"Downloaded Excel for absentees on {date_str} (Branch: {branch}, Course: {course})")
     return Response(output.getvalue(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     headers={"Content-Disposition": f"attachment;filename=absentees_{date_str}.xlsx"})
+
+@app.route('/student/generate_qr', methods=['GET'])
+@login_required
+def generate_qr_student():
+    if current_user.role != 'student':
+        return "Access denied: Only students can generate QR codes.", 403
+    
+    # Get student ID and current date
+    student_id = current_user.id  # Student’s unique ID
+    current_date = datetime.now().strftime("%Y-%m-%d")  # Format: YYYY-MM-DD (e.g., 2025-03-27)
+    
+    # Combine student ID and date for QR code data
+    qr_data = f"{student_id}-{current_date}"  # e.g., "12345-2025-03-27"
+    
+    # Generate QR code in memory
+    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+    
+    img = qr.make_image(fill_color="black", back_color="white")
+    img_buffer = BytesIO()
+    img.save(img_buffer, format="PNG")
+    img_buffer.seek(0)
+    
+    return Response(img_buffer.getvalue(), mimetype='image/png')
 
 @app.route('/logout')
 @login_required
@@ -1249,6 +1530,10 @@ def logout():
 def serve_image(filename):
     return send_from_directory('static/images', filename)
 
+@app.route('/static/resumes/<filename>')
+def serve_resume(filename):
+    return send_from_directory('static/resumes', filename)
+
 @app.route('/static/videos/<filename>')
 def serve_video(filename):
     return send_from_directory('static/videos', filename)
@@ -1259,4 +1544,13 @@ def serve_sound(filename):
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True)
+    os.makedirs("static/images", exist_ok=True)
+    os.makedirs("static/resumes", exist_ok=True)
+    os.makedirs("static/qr_codes", exist_ok=True)
+    os.makedirs("static/sounds", exist_ok=True)
+    # Log all registered endpoints for debugging
+    with app.test_request_context():
+        logging.info("Registered endpoints:")
+        for rule in app.url_map.iter_rules():
+            logging.info(f"Endpoint: {rule.endpoint}, URL: {rule}")
+    app.run(host='0.0.0.0', port=5000, debug=True)
