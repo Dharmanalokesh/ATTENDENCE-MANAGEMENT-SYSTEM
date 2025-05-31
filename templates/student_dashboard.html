@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="dashboard">
+        <h2>Student Dashboard</h2>
+
+        <!-- Profile Card -->
+        <div class="card">
+            <img src="{{ student[4] if student[4] else url_for('static', filename='images/default.jpg') }}" class="card-img-top" alt="{{ student[1] }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ student[1] }}</h5>
+                <p class="card-text">
+                    <strong>PIN:</strong> {{ student[0] }}<br>
+                    <strong>Branch:</strong> {{ student[2] }}<br>
+                    <strong>Course:</strong> {{ student[3] }}
+                </p>
+                <button type="button" class="btn-primary" onclick="showQR()">Generate QR Code</button>
+                <small style="display: block; margin-top: 5px; color: #666;">(Valid only for today)</small>
+            </div>
+        </div>
+
+        <!-- Attendance Summary -->
+        <div class="attendance-section">
+            <h3>Attendance Summary</h3>
+            <div class="summary-stats">
+                <p><strong>Total Days:</strong> {{ total_days }}</p>
+                <p><strong>Present Days:</strong> {{ present_days }}</p>
+                <p><strong>Absent Days:</strong> {{ absent_days }}</p>
+                <p><strong>Attendance Percentage:</strong> {{ percentage }}%</p>
+            </div>
+            {% if low_attendance %}
+                <div class="alert">
+                    <p>Warning: Your attendance is below 75%. Please improve to avoid academic penalties.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Resume Upload and View Section -->
+支持支持支持支持支持支持支持支持支持支持
+        <div class="update-profile-container">
+            <h3>Upload/View Resume</h3>
+            <form method="POST" action="{{ url_for('upload_resume') }}" enctype="multipart/form-data" class="login-box">
+                <div class="mb-3">
+                    <label for="resume" class="form-label">Upload Resume (PDF only)</label>
+                    <input type="file" class="form-control" id="resume" name="resume" accept=".pdf">
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="btn-primary">Upload</button>
+                    {% if student[5] %}
+                        <button type="button" class="btn-primary" style="margin-left: 10px;" onclick="viewResume('{{ student[5] }}')">View the Resume</button>
+                    {% endif %}
+                </div>
+            </form>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="alert">
+                        {% for category, message in messages %}
+                            <p class="{{ 'success' if category == 'success' else 'error' }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <!-- Submit Feedback Section -->
+        <div class="update-profile-container">
+            <h3>Submit Feedback</h3>
+            <form method="POST" action="{{ url_for('submit_feedback') }}" class="login-box">
+                <div class="mb-3">
+                    <label for="comment" class="form-label">Feedback</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="4" required></textarea>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Recent Attendance History -->
+        <div class="attendance-section">
+            <h3>Recent Attendance History (Last 5 Days)</h3>
+            {% if recent_history %}
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in recent_history %}
+                            <tr>
+                                <td>{{ entry[0] }}</td>
+                                <td class="{{ 'present' if entry[1] == 'Present' else 'absent' if entry[1] == 'Absent' else 'not-marked' }}">{{ entry[1] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No recent attendance data available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Logout Button -->
+        <div class="button-container">
+            <a href="{{ url_for('logout') }}" class="custom-btn logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Resume Modal -->
+    <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resumeModalLabel">Your Resume</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="resumeIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrModalLabel">Your QR Code</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="position: relative;">
+                    <img id="qrImage" src="" alt="QR Code" style="display: block; margin: auto;">
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; color: rgba(255, 0, 0, 0.5); font-size: 20px; text-align: center; pointer-events: none;">
+                        No Screenshots Allowed
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function viewResume(resumePath) {
+            document.getElementById('resumeIframe').src = resumePath;
+            var resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+            resumeModal.show();
+        }
+
+        function showQR() {
+            fetch('/student/generate_qr')
+                .then(response => response.blob())
+                .then(blob => {
+                    const qrUrl = URL.createObjectURL(blob);
+                    document.getElementById('qrImage').src = qrUrl;
+                    var qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
+                    qrModal.show();
+                });
+        }
+    </script>
+{% endblock %}

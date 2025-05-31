@@ -1,0 +1,804 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="dashboard">
+        <h2>Trainer Dashboard</h2>
+
+        <!-- Quick Stats Overview -->
+        {% if not action %}
+            <div class="summary-stats">
+                <h3>Quick Stats</h3>
+                <p><strong>Total Students:</strong> {{ total_students }}</p>
+                <p><strong>Present Today:</strong> {{ present_today }}</p>
+                <p><strong>Absent Today:</strong> {{ absent_today }}</p>
+                <p><strong>Attendance Percentage Today:</strong> {{ percentage_today }}%</p>
+                <p><strong>Reminders Enabled:</strong> {% if reminders_enabled %}Yes{% else %}No{% endif %}</p>
+                {% if reminders_enabled %}
+                    <p><strong>Consecutive Days:</strong> {{ config.consecutive_days }}</p>
+                
+                
+                {% endif %}
+            </div>
+
+            <!-- Recent Activity Log -->
+            <div class="activity-log">
+                <h3>Recent Activity</h3>
+                {% if recent_activity %}
+                    <ul>
+                        {% for activity in recent_activity %}
+                            <li>{{ activity[0] }} - <strong>{{ activity[1] }}:</strong> {{ activity[2] }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No recent activity recorded.</p>
+                {% endif %}
+            </div>
+
+            <!-- Reminder Toggle -->
+            <div class="reminder-toggle">
+                <h3>Automated Reminders</h3>
+                <form method="POST" action="{{ url_for('toggle_reminders') }}">
+                    <label>
+                        <input type="checkbox" name="reminders_enabled" {% if reminders_enabled %}checked{% endif %}>
+                        Enable Attendance Reminders (for {{ config.consecutive_days }}+ consecutive absences)
+                    </label>
+                    <button type="submit" class="btn-primary">Save</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- Initial Button Dashboard (Two-Row Grid Layout) -->
+        {% if not action %}
+            <div class="action-buttons initial-buttons">
+                <a href="{{ url_for('trainer_dashboard') }}?action=scan" class="custom-btn scan-btn">
+                    <i class="fas fa-qrcode"></i> Scan QR
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=search" class="custom-btn details-btn">
+                    <i class="fas fa-users"></i> Students Details
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=add" class="custom-btn add-btn">
+                    <i class="fas fa-user-plus"></i> Add a Student
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=bulk_upload" class="custom-btn bulk-btn">
+                    <i class="fas fa-upload"></i> Bulk Upload Students
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=today_excel" class="custom-btn excel-btn">
+                    <i class="fas fa-file-excel"></i> Excel Attendance
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=today_gsheets" class="custom-btn gsheets-btn">
+                    <i class="fas fa-table"></i> GSheets Attendance
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=review_feedback" class="custom-btn feedback-btn feedback-review">
+                    <i class="fas fa-comment"></i> Review Feedback
+                </a>
+                <a href="{{ url_for('trainer_dashboard') }}?action=student_resumes" class="custom-btn resume-btn">
+                    <i class="fas fa-file-pdf"></i> Student Resumes
+                </a>
+                <a href="{{ url_for('logout') }}" class="custom-btn logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- Scan QR Section -->
+        {% if action == 'scan' %}
+            <div class="scan-section">
+                <h3>Scan QR Code</h3>
+                <p>Position the QR code in front of your camera to mark attendance.</p>
+                <video id="qr-video" autoplay playsinline style="width: 100%; max-width: 600px; border: 2px solid #ff6f61;"></video>
+                <canvas id="qr-canvas" style="display: none;"></canvas>
+                <audio id="scan-sound" src="{{ url_for('static', filename='sounds/scan-beep.mp3') }}" preload="auto"></audio>
+                <button id="stopScanBtn" class="btn-primary">Stop Scanning</button>
+                <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+            </div>
+        {% endif %}
+
+        <!-- Add a Student Form Section -->
+        {% if action == 'add' %}
+            <div class="add-student-section">
+                <h3>Add a Student</h3>
+                <form method="POST" action="{{ url_for('add_student') }}" enctype="multipart/form-data" class="login-box">
+                    <div class="mb-3">
+                        <label for="pin" class="form-label">PIN (Roll.No)</label>
+                        <input type="text" class="form-control search-input" id="pin" name="pin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control search-input" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="branch" class="form-label">Branch</label>
+                        <input type="text" class="form-control search-input" id="branch" name="branch" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="course" class="form-label">Course</label>
+                        <input type="text" class="form-control search-input" id="course" name="course" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Photo</label>
+                        <input type="file" class="form-control" id="photo" name="photo" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Submit</button>
+                    <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- Review Feedback Section -->
+        {% if action == 'review_feedback' %}
+            <div class="attendance-section">
+                <h3>Student Feedback</h3>
+                <!-- Search Bar for Feedback -->
+                <div class="search-container">
+                    <form method="GET" action="{{ url_for('trainer_dashboard') }}">
+                        <input type="hidden" name="action" value="review_feedback">
+                        <select name="search_field" class="search-select">
+                            <option value="pin" {% if request.args.get('search_field') == 'pin' %}selected{% endif %}>PIN</option>
+                            <option value="name" {% if request.args.get('search_field') == 'name' %}selected{% endif %}>Name</option>
+                            <option value="branch" {% if request.args.get('search_field') == 'branch' %}selected{% endif %}>Branch</option>
+                            <option value="course" {% if request.args.get('search_field') == 'course' %}selected{% endif %}>Course</option>
+                        </select>
+                        <input type="text" name="search" placeholder="Enter search term" class="search-input" value="{{ request.args.get('search', '') }}">
+                        <button type="submit" class="btn-primary">Search</button>
+                    </form>
+                </div>
+
+                <p>Debug: {{ filtered_feedbacks|length }} records</p>
+                {% if filtered_feedbacks|length > 0 %}
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>PIN (Roll.No)</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Course</th>
+                                <th>Comment</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for feedback in filtered_feedbacks %}
+                                <tr>
+                                    <td>{{ feedback[0] }}</td>
+                                    <td>{{ feedback[1] }}</td>
+                                    <td>{{ feedback[2] }}</td>
+                                    <td>{{ feedback[3] }}</td>
+                                    <td>{{ feedback[4] }}</td>
+                                    <td>{{ feedback[5] }}</td>
+                                    <td>
+                                        <select class="feedback-status" data-feedback-id="{{ feedback[6] }}">
+                                            <option value="Pending" {% if feedback[7] == 'Pending' %}selected{% endif %}>Pending</option>
+                                            <option value="Reviewed" {% if feedback[7] == 'Reviewed' %}selected{% endif %}>Reviewed</option>
+                                            <option value="Resolved" {% if feedback[7] == 'Resolved' %}selected{% endif %}>Resolved</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button class="custom-btn delete-btn" onclick="deleteFeedback('{{ feedback[6] }}')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Download Feedback Excel Button -->
+                    <div class="button-container" style="margin-top: 20px;">
+                        <a href="{{ url_for('download_feedback_excel') }}" class="btn-primary">Download Feedback Excel</a>
+                    </div>
+                {% else %}
+                    <p>No feedback submitted yet.</p>
+                {% endif %}
+                <div class="button-container">
+                    <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Bulk Upload Section -->
+        {% if action == 'bulk_upload' %}
+            <div class="bulk-upload-section">
+                <h3>Bulk Upload Students</h3>
+                <p>Upload an Excel or CSV file with columns: PIN (Roll.No), NAME, BRANCH, COURSE, EMAIL.</p>
+                <form method="POST" action="{{ url_for('bulk_upload_students') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select File</label>
+                        <input type="file" class="form-control" id="file" name="file" accept=".xlsx,.xls,.csv" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Upload</button>
+                    <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+                </form>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
+
+        <!-- Students Details Section -->
+        {% if action == 'search' %}
+            <div class="search-section">
+                <h3>Students Details</h3>
+                <div class="search-container">
+                    <form method="GET" action="{{ url_for('trainer_dashboard') }}">
+                        <input type="hidden" name="action" value="search">
+                        <select name="search_field" class="search-select">
+                            <option value="pin" {% if request.args.get('search_field') == 'pin' %}selected{% endif %}>PIN</option>
+                            <option value="name" {% if request.args.get('search_field') == 'name' %}selected{% endif %}>Name</option>
+                            <option value="branch" {% if request.args.get('search_field') == 'branch' %}selected{% endif %}>Branch</option>
+                            <option value="course" {% if request.args.get('search_field') == 'course' %}selected{% endif %}>Course</option>
+                        </select>
+                        <input type="text" name="search" placeholder="Enter search term" class="search-input" value="{{ request.args.get('search', '') }}">
+                        <button type="submit" class="btn-primary">Search</button>
+                    </form>
+                </div>
+                <div class="student-list">
+                    {% if students %}
+                        <div class="row">
+                            {% for student in students %}
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <img src="{{ url_for('serve_image', filename=student[0] + '.jpg') if student[4] else url_for('static', filename='images/default.jpg') }}" class="card-img-top" alt="{{ student[1] }}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ student[1] }}</h5>
+                                            <p class="card-text">
+                                                <strong>PIN:</strong> {{ student[0] }}<br>
+                                                <strong>Branch:</strong> {{ student[2] }}<br>
+                                                <strong>Course:</strong> {{ student[3] }}
+                                            </p>
+                                            <button class="custom-btn delete-btn" data-pin="{{ student[0] }}" onclick="confirmDelete('{{ student[0] }}', '{{ student[1] }}')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No students found.</p>
+                    {% endif %}
+                </div>
+                <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+            </div>
+        {% endif %}
+
+        <!-- Student Resumes Section -->
+        {% if action == 'student_resumes' %}
+            <div class="attendance-section">
+                <h3>Student Resumes</h3>
+                <div class="search-container">
+                    <form method="GET" action="{{ url_for('trainer_dashboard') }}">
+                        <input type="hidden" name="action" value="student_resumes">
+                        <input type="text" name="pin_search" placeholder="Search by PIN" class="search-input" value="{{ request.args.get('pin_search', '') }}">
+                        <button type="submit" class="btn-primary">Search</button>
+                    </form>
+                </div>
+                {% if students_with_resumes %}
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>PIN</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Course</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students_with_resumes %}
+                                <tr>
+                                    <td>{{ student[0] }}</td>
+                                    <td>{{ student[1] }}</td>
+                                    <td>{{ student[2] }}</td>
+                                    <td>{{ student[3] }}</td>
+                                    <td>
+                                        <button class="custom-btn view-resume-btn" onclick="viewResume('{{ student[4] }}')">
+                                            <i class="fas fa-eye"></i> View Resume
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No resumes found for the given PIN.</p>
+                {% endif %}
+                <div class="button-container">
+                    <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Excel Attendance List -->
+        {% if action == 'today_excel' %}
+            <div class="attendance-section">
+                <h3>Excel Attendance List</h3>
+                <div class="search-container">
+                    <form method="GET" action="{{ url_for('trainer_dashboard') }}" id="excel-date-form">
+                        <input type="hidden" name="action" value="today_excel">
+                        <label for="date" class="form-label">Select Date:</label>
+                        <input type="date" id="date" name="date" value="{{ selected_date }}" class="search-input" onchange="submitExcelForm()">
+                        <label for="branch" class="form-label">Filter by Branch:</label>
+                        <select name="branch" id="branch" class="search-input" onchange="submitExcelForm()">
+                            {% for branch in branches %}
+                                <option value="{{ branch }}" {% if selected_branch == branch %}selected{% endif %}>
+                                    {{ branch if branch != 'all' else 'All Branches' }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <label for="course" class="form-label">Filter by Course:</label>
+                        <select name="course" id="course" class="search-input" onchange="submitExcelForm()">
+                            {% for course in courses %}
+                                <option value="{{ course }}" {% if selected_course == course %}selected{% endif %}>
+                                    {{ course if course != 'all' else 'All Courses' }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn-primary" style="margin-left: 10px;">Apply</button>
+                    </form>
+                </div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Attendance Summary -->
+                <div class="summary-stats">
+                    <h4>Attendance Summary ({{ selected_date }})</h4>
+                    <p><strong>Total Students:</strong> {{ total_filtered_students }}</p>
+                    <p><strong>Present:</strong> {{ present_count }}</p>
+                    <p><strong>Absent:</strong> {{ absent_count }}</p>
+                    <p><strong>Attendance Percentage:</strong> {{ percentage_filtered }}%</p>
+                </div>
+
+                <h4>Present Students ({{ selected_date }})</h4>
+                {% if present_students %}
+                    <table class="attendance-table" id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>PIN</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Course</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in present_students %}
+                                <tr>
+                                    <td>{{ student[0] }}</td>
+                                    <td>{{ student[1] }}</td>
+                                    <td>{{ student[2] }}</td>
+                                    <td>{{ student[3] }}</td>
+                                    <td>
+                                        <select class="status-select" data-pin="{{ student[0] }}" data-date="{{ selected_date }}" data-course="{{ student[3] }}">
+                                            <option value="Present" selected>Present</option>
+                                            <option value="Absent">Absent</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No present students recorded on {{ selected_date }} in Excel.</p>
+                {% endif %}
+
+                <h4>Absent Students ({{ selected_date }})</h4>
+                {% if absent_students %}
+                    <table class="attendance-table" id="attendanceTable">
+                        <thead>
+                            <tr>
+                                <th>PIN</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                                <th>Course</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in absent_students %}
+                                <tr>
+                                    <td>{{ student[0] }}</td>
+                                    <td>{{ student[1] }}</td>
+                                    <td>{{ student[2] }}</td>
+                                    <td>{{ student[3] }}</td>
+                                    <td>
+                                        <select class="status-select" data-pin="{{ student[0] }}" data-date="{{ selected_date }}" data-course="{{ student[3] }}">
+                                            <option value="Present">Present</option>
+                                            <option value="Absent" selected>Absent</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No absent students recorded on {{ selected_date }} in Excel.</p>
+                {% endif %}
+
+                <!-- New Download Buttons -->
+                <div class="button-container" style="margin-top: 20px;">
+                    <a href="{{ url_for('download_excel_presentees', date=selected_date) }}" class="btn-primary">Download Excel for Presentees</a>
+                    <a href="{{ url_for('download_excel_absentees', date=selected_date) }}" class="btn-primary" style="margin-left: 10px;">Download Excel for Absentees</a>
+                </div>
+                <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+            </div>
+        {% endif %}
+
+        <!-- Google Sheets Attendance List -->
+        {% if action == 'today_gsheets' %}
+            <div class="attendance-section">
+                <h3>Google Sheets Attendance List</h3>
+                <div class="search-container">
+                    <form method="GET" action="{{ url_for('trainer_dashboard') }}" id="gsheets-date-form">
+                        <input type="hidden" name="action" value="today_gsheets">
+                        <label for="date" class="form-label">Select Date:</label>
+                        <input type="date" id="date" name="date" value="{{ selected_date }}" class="search-input" onchange="submitGsheetsForm()">
+                        <button type="submit" class="btn-primary" style="margin-left: 10px;">Apply</button>
+                    </form>
+                </div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <h4>Present Students ({{ selected_date }})</h4>
+                {% if present_students %}
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>PIN</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in present_students %}
+                                <tr>
+                                    <td>{{ student[0] }}</td>
+                                    <td>{{ student[1] }}</td>
+                                    <td>{{ student[2] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No present students recorded on {{ selected_date }} in Google Sheets.</p>
+                {% endif %}
+
+                <h4>Absent Students ({{ selected_date }})</h4>
+                {% if absent_students %}
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>PIN</th>
+                                <th>Name</th>
+                                <th>Branch</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in absent_students %}
+                                <tr>
+                                    <td>{{ student[0] }}</td>
+                                    <td>{{ student[1] }}</td>
+                                    <td>{{ student[2] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>No absent students recorded on {{ selected_date }} in Google Sheets.</p>
+                {% endif %}
+
+                <div class="button-container" style="margin-top: 20px;">
+                    <a href="{{ url_for('download_gsheets_today', date=selected_date) }}" class="btn-primary">Download Excel</a>
+                </div>
+                <a href="{{ url_for('trainer_dashboard') }}" class="back-to-dashboard">Back to Dashboard</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Resume Modal -->
+    <div class="modal fade" id="resumeModal" tabindex="-1" aria-labelledby="resumeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resumeModalLabel">Student Resume</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="resumeIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {% if action == 'scan' %}
+        <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+        <script>
+            const video = document.getElementById('qr-video');
+            const canvas = document.getElementById('qr-canvas');
+            const ctx = canvas.getContext('2d');
+            const scanSound = document.getElementById('scan-sound');
+            let stream = null;
+            const scannedPins = new Set();
+
+            async function startScanning() {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { facingMode: 'environment' } 
+                    });
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        scanQR();
+                    };
+                } catch (err) {
+                    console.error('Camera access error:', err);
+                    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                        if (confirm('Camera access denied. Please allow camera access and retry.')) {
+                            setTimeout(startScanning, 500);
+                        } else {
+                            alert('Scanning requires camera access. Returning to dashboard.');
+                            window.location.href = '{{ url_for('trainer_dashboard') }}';
+                        }
+                    } else {
+                        alert('Error accessing camera: ' + err.message);
+                        window.location.href = '{{ url_for('trainer_dashboard') }}';
+                    }
+                }
+            }
+
+            function scanQR() {
+                if (!video.srcObject) return;
+
+                if (video.videoWidth === 0 || video.videoHeight === 0) {
+                    console.log('Video not ready yet, waiting...');
+                    requestAnimationFrame(scanQR);
+                    return;
+                }
+
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                if (canvas.width > 0 && canvas.height > 0) {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+                    if (code) {
+                        const pin = code.data;
+                        if (!scannedPins.has(pin)) {
+                            scannedPins.add(pin);
+                            console.log('Scanned PIN:', pin);
+                            scanSound.play();
+                            video.style.borderColor = '#00b09b';
+                            setTimeout(() => {
+                                video.style.borderColor = '#ff6f61';
+                            }, 1000);
+                            sendScannedPins();
+                        }
+                    }
+                } else {
+                    console.error('Canvas dimensions are zero, skipping frame.');
+                }
+
+                requestAnimationFrame(scanQR);
+            }
+
+            function stopScanning() {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+            }
+
+            function sendScannedPins() {
+                fetch('/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ scanned_pins: Array.from(scannedPins) })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Successfully sent:', data.scanned);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => alert('Error sending scan data: ' + error.message));
+            }
+
+            startScanning();
+
+            document.getElementById('stopScanBtn').addEventListener('click', () => {
+                stopScanning();
+                if (scannedPins.size > 0) {
+                    sendScannedPins();
+                    setTimeout(() => {
+                        window.location.href = '{{ url_for('trainer_dashboard') }}';
+                    }, 500);
+                } else {
+                    window.location.href = '{{ url_for('trainer_dashboard') }}';
+                }
+            });
+        </script>
+    {% endif %}
+
+    {% if action == 'today_excel' %}
+        <script>
+            function submitExcelForm() {
+                try {
+                    const form = document.getElementById('excel-date-form');
+                    const dateInput = document.getElementById('date');
+                    console.log('Excel form submitting with date:', dateInput.value);
+                    if (form && dateInput.value) {
+                        form.submit();
+                    } else {
+                        console.error('Form or date input not found');
+                    }
+                } catch (error) {
+                    console.error('Error submitting Excel form:', error);
+                }
+            }
+
+            document.querySelectorAll('.status-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const pin = this.getAttribute('data-pin');
+                    const date = this.getAttribute('data-date');
+                    const status = this.value;
+                    const course = this.getAttribute('data-course');
+
+                    fetch('/correct_attendance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pin: pin, date: date, status: status, course: course })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating attendance:', error);
+                        alert('Error updating attendance: ' + error.message);
+                    });
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% if action == 'today_gsheets' %}
+        <script>
+            function submitGsheetsForm() {
+                try {
+                    const form = document.getElementById('gsheets-date-form');
+                    const dateInput = document.getElementById('date');
+                    console.log('Gsheets form submitting with date:', dateInput.value);
+                    if (form && dateInput.value) {
+                        form.submit();
+                    } else {
+                        console.error('Form or date input not found');
+                    }
+                } catch (error) {
+                    console.error('Error submitting Gsheets form:', error);
+                }
+            }
+        </script>
+    {% endif %}
+
+    {% if action == 'search' %}
+        <script>
+            function confirmDelete(pin, name) {
+                if (confirm(`Are you sure you want to delete student ${name} (PIN: ${pin})? This action cannot be undone.`)) {
+                    fetch('/delete_student', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pin: pin })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting student:', error);
+                        alert('Error deleting student: ' + error.message);
+                    });
+                }
+            }
+        </script>
+    {% endif %}
+
+    {% if action == 'student_resumes' %}
+        <script>
+            function viewResume(resumePath) {
+                document.getElementById('resumeIframe').src = resumePath;
+                var resumeModal = new bootstrap.Modal(document.getElementById('resumeModal'));
+                resumeModal.show();
+            }
+        </script>
+    {% endif %}
+
+    {% if action == 'review_feedback' %}
+        <script>
+            // Update feedback status
+            document.querySelectorAll('.feedback-status').forEach(select => {
+                select.addEventListener('change', function() {
+                    const feedbackId = this.getAttribute('data-feedback-id');
+                    const status = this.value;
+
+                    fetch('/update_feedback_status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ feedback_id: feedbackId, status: status })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Feedback status updated successfully!');
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating feedback status:', error);
+                        alert('Error updating feedback status: ' + error.message);
+                    });
+                });
+            });
+
+            // Delete feedback
+            function deleteFeedback(feedbackId) {
+                if (confirm('Are you sure you want to delete this feedback? This action cannot be undone.')) {
+                    fetch('/delete_feedback', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ feedback_id: feedbackId })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            alert('Feedback deleted successfully!');
+                            location.reload();
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting feedback:', error);
+                        alert('Error deleting feedback: ' + error.message);
+                    });
+                }
+            }
+        </script>
+    {% endif %}
+{% endblock %}

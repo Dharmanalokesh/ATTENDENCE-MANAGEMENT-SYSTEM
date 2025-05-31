@@ -1,0 +1,1159 @@
+/* General Styling with Background Image and Dark Mode */
+body {
+    background: url('/static/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    animation: fadeIn 1.5s ease-in-out;
+}
+/* Target the Student Login button when clicked */
+.btn-primary:active {
+    background-color: #ff8c00 !important; /* Change background color to #ff8c00 on click */
+    border-color: #ff8c00 !important; /* Optional: Change border color to match */
+    color: #fff !important; /* Ensure text color remains white for contrast */
+}
+
+/* Optional: If you want to change the hover state as well */
+.btn-primary:hover {
+    background-color: #e07b00; /* Slightly darker shade for hover */
+    border-color: #e07b00;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Container Styling with Scale Animation */
+.container {
+    background: rgba(50, 50, 50, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+    border: 2px solid #ff8c00;
+    margin: 25px auto;
+    max-width: 95%;
+    animation: scaleIn 0.8s ease-out;
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Navbar Styling with Slide Down */
+.navbar {
+    background-color: #1a1a1a;
+    border-bottom: 4px solid #ff8c00;
+    padding: 10px 20px;
+    animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+/* Hero Section */
+.hero {
+    padding: 60px 0;
+    color: #f5f5f5;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* Heading Styling (No Animation for Welcome Text) */
+h1, h2, h5 {
+    font-family: 'Roboto', sans-serif;
+    color: #ff8c00;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    position: relative;
+    display: inline-block;
+    padding: 0 10px 5px 10px;
+    border-bottom: 3px solid #ffa726;
+}
+
+/* Specific Style for Welcome Text (No Animation) */
+.welcome-text {
+    font-family: 'Roboto', sans-serif;
+    color: #ff8c00;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 0 10px 5px 10px;
+    border-bottom: 3px solid #ffa726;
+}
+
+/* Login Box with 50% Transparency and Bounce In */
+.login-box {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 25px;
+    background: rgba(60, 60, 60, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+    border: 1px solid #ff8c00;
+    animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    60% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* Login Box Button Layout */
+.login-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-box button, .login-box a.btn-success {
+    width: 100%;
+    text-align: center;
+}
+
+/* Dashboard with Fade Up */
+.dashboard {
+    padding: 25px;
+    animation: fadeUp 1s ease-out;
+}
+
+@keyframes fadeUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Card Styling (No Flip Animation) */
+.card {
+    background: rgba(70, 70, 70, 0.95);
+    border: 2px solid #ff8c00;
+    border-radius: 12px;
+    max-width: 360px;
+    margin: 25px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Card Image */
+.card-img-top {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 2px solid #ff8c00;
+    backface-visibility: hidden;
+}
+
+/* Card Body */
+.card-body {
+    padding: 20px;
+    color: #f5f5f5;
+    backface-visibility: hidden;
+}
+
+/* Card Title (No Animation, Reduced Fade) */
+.card-title {
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #ffa726;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Card Text */
+.card-text {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.card-text strong {
+    color: #ff8c00;
+    font-weight: 600;
+}
+
+/* Button Styling with Pulse Animation */
+.btn-primary, .btn-success, .blink-btn, .btn-info, .btn-warning {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 10px;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4), inset 0 -1px 3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+    text-decoration: none;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Button Hover Effect */
+.btn-primary:hover, .btn-success:hover, .blink-btn:hover, .btn-info:hover, .btn-warning:hover {
+    animation: none;
+    text-decoration: none;
+}
+
+/* Button Variants with Consistent Orange Theme */
+.btn-primary {
+    background: #ff8c00; /* Solid orange color */
+}
+
+.btn-primary:hover {
+    background: #ff8c00; /* Darker orange on hover */
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.btn-success:hover {
+    background: linear-gradient(45deg, #ffa726, #ff4500);
+}
+
+.blink-btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    padding: 10px 25px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.btn-info {
+    background: linear-gradient(45deg, #ff8c00, #ffc107);
+    color: #f4eaea;
+}
+
+.btn-info:hover {
+    background: linear-gradient(45deg, #ff8c00, #ffc107);
+}
+
+.btn-warning {
+    background: linear-gradient(45deg, #ff8c00, #ffc107);
+    color: #eaeef3;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(45deg, #ffc107, #ff8c00);
+}
+
+/* Search Container */
+.search-container {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Search Input with Expand Animation */
+.search-input {
+    padding: 10px 15px;
+    width: 300px;
+    border: 2px solid #ff8c00;
+    border-radius: 8px;
+    background: rgba(60, 60, 60, 0.95);
+    color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: width 0.4s ease-in-out;
+}
+
+.search-input:focus {
+    width: 340px;
+    border-color: #ffa726;
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
+
+.search-input::placeholder {
+    color: #a0a0a0;
+}
+
+/* Student List Table with Row Fade */
+.student-list table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(70, 70, 70, 0.95);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.student-list tr {
+    animation: rowFade 0.5s ease-in;
+}
+
+@keyframes rowFade {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.student-list th, .student-list td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ff8c00;
+}
+
+.student-list th {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.student-list td {
+    color: #f5f5f5;
+}
+
+/* Student Photo */
+.student-photo {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #ff8c00;
+    transition: transform 0.3s ease;
+}
+
+.student-photo:hover {
+    transform: scale(1.1);
+}
+
+/* Action Buttons */
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Initial Buttons Layout (Side-by-Side with Flexbox) */
+.initial-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 40px auto;
+    max-width: 1400px;
+    animation: slideIn 0.8s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Custom Button Styling */
+.custom-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 180px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.custom-btn i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+/* Button Variants with Consistent Orange Theme */
+.scan-btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+}
+
+.scan-btn:hover {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.face-btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+}
+
+.face-btn:hover {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.details-btn {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.details-btn:hover {
+    background: linear-gradient(45deg, #ffa726, #ff4500);
+}
+
+.add-btn {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.add-btn:hover {
+    background: linear-gradient(45deg, #ffa726, #ff4500);
+}
+
+.bulk-btn {
+    background: #ff8c00; /* Solid orange for Bulk Upload Students */
+}
+
+.bulk-btn:hover {
+    background: #e07b00; /* Darker orange on hover */
+}
+
+.excel-btn {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.excel-btn:hover {
+    background: linear-gradient(45deg, #ffa726, #ff4500);
+}
+
+.gsheets-btn {
+    background: linear-gradient(45deg, #ff8c00, #ffc107);
+}
+
+.gsheets-btn:hover {
+    background: linear-gradient(45deg, #ffc107, #ff8c00);
+}
+
+.announce-btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+}
+
+.announce-btn:hover {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+/* Hover Effects for Custom Buttons */
+.custom-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(255, 140, 0, 0.5);
+}
+
+.custom-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s ease;
+    border-radius: 50%;
+}
+
+.custom-btn:hover::after {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Section Styling */
+.scan-section, .add-student-section, .search-section, .attendance-section {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.scan-section h3, .add-student-section h3, .search-section h3, .attendance-section h3 {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    color: #ff8c00;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.mb-3 {
+    margin-bottom: 15px;
+}
+
+/* Scan Section */
+.scan-section {
+    text-align: center;
+    margin-top: 40px;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+.scan-section h3 {
+    color: #ff9f1c;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.scan-section p {
+    color: #d3d3d3;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.scan-section video {
+    background: #3a3a5c;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.scan-section button, .scan-section a {
+    margin: 10px;
+}
+
+/* Attendance Section */
+.attendance-section {
+    text-align: left;
+}
+
+.attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: rgba(70, 70, 70, 0.95);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+}
+
+.attendance-table th, .attendance-table td {
+    padding: 10px;
+    border: 1px solid #ff8c00;
+    text-align: left;
+    color: #f5f5f5;
+}
+
+.attendance-table th {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.attendance-table tr:nth-child(even) {
+    background-color: rgba(90, 90, 90, 0.95);
+}
+
+.attendance-section a {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Summary Stats */
+.summary-stats {
+    background: rgba(70, 70, 70, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+}
+
+.summary-stats p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+    color: #f5f5f5;
+}
+
+.summary-stats strong {
+    color: #ff8c00;
+}
+
+/* Alert */
+.alert {
+    background: rgba(255, 69, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ff4500;
+    color: #ff4500;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Attendance Table Status Colors */
+.present {
+    color: #00b09b;
+    font-weight: 600;
+}
+
+.absent {
+    color: #ff4500;
+    font-weight: 600;
+}
+
+.not-marked {
+    color: #a0a0a0;
+    font-style: italic;
+}
+
+/* Password Container */
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container .toggle-password {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    color: #ff8c00;
+    font-size: 1.2rem;
+}
+
+.password-container .toggle-password:hover {
+    color: #ffa726;
+}
+
+/* Forgot Password Link */
+.forgot-password {
+    color: #ff8c00;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block;
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.forgot-password:hover {
+    color: #ffa726;
+    text-decoration: underline;
+}
+
+/* Date Picker Styling */
+input[type="date"] {
+    padding: 10px 15px;
+    border: 2px solid #ff8c00;
+    border-radius: 8px;
+    background: rgba(60, 60, 60, 0.95);
+    color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    width: 200px;
+}
+
+input[type="date"]:focus {
+    border-color: #ffa726;
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(70%) sepia(100%) saturate(500%) hue-rotate(10deg);
+}
+
+/* Student Dashboard Specific Styles */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.student-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 2px solid #ff8c00;
+}
+
+.attendance-summary, .recent-history, .announcements, .quick-links, .attendance-trend {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: rgba(70, 70, 70, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(255, 140, 0, 0.1);
+    border: 1px solid #ff8c00;
+}
+
+.attendance-summary h3, .recent-history h3, .announcements h3, .quick-links h3, .attendance-trend h3 {
+    margin-top: 0;
+    color: #ff8c00;
+    border-bottom: 2px solid #ffa726;
+    padding-bottom: 5px;
+}
+
+.attendance-summary p {
+    margin: 5px 0;
+}
+
+.warning {
+    color: #ff4500;
+    font-weight: bold;
+}
+
+.recent-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.recent-history th, .recent-history td {
+    border: 1px solid #ff8c00;
+    padding: 8px;
+    text-align: left;
+    color: #f5f5f5;
+}
+
+.recent-history th {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: #ffffff;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.announcements ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.announcements li {
+    margin-bottom: 10px;
+    color: #f5f5f5;
+}
+
+.announcements li strong {
+    color: #ff8c00;
+}
+
+.quick-links .custom-btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.logout-btn {
+    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    color: white;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(45deg, #ff8c00, #ffa726);
+}
+
+.chart-container {
+    width: 600px;
+    margin: 20px auto;
+}
+
+.face-recognition-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Recent Activity Log */
+.activity-log {
+    background: rgba(70, 70, 70, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin: 20px 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.activity-log h3 {
+    color: #ff8c00;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #ffa726;
+    padding-bottom: 5px;
+}
+
+.activity-log ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-log li {
+    color: #f5f5f5;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.activity-log li strong {
+    color: #ff8c00;
+    font-weight: 600;
+}
+
+.activity-log p {
+    color: #ff6a00;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Update Profile Styles */
+.update-profile-container {
+    text-align: center;
+    padding: 20px;
+    background: rgba(50, 50, 50, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+    border: 2px solid #ff8c00;
+    margin: 25px auto
+}
+
+/* Add a Student Section Styling with Fade In Animation */
+.add-student-section {
+    max-width: 600px; /* Existing container width */
+    margin: 30px auto;
+    padding: 25px; /* Padding around the entire section */
+    background: rgba(50, 50, 50, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+    border: 2px solid #ff8c00;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Form Styling within Add a Student Section */
+.add-student-section .login-box {
+    max-width: 100%; /* Ensure the form takes full width of the container */
+    margin: 0;
+    padding: 0; /* Remove padding since the parent container handles it */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    animation: none;
+}
+
+/* Form Fields Layout */
+.add-student-section .login-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Style for Individual Form Fields */
+.add-student-section .mb-3 {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Form Labels */
+.add-student-section .form-label {
+    color: #ff8c00;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Form Inputs */
+.add-student-section .mb-3 input,
+.add-student-section .mb-3 select {
+    padding: 10px 15px;
+    width: 100%; /* Full width of the parent (.mb-3) */
+    max-width: 100%; /* Ensure it doesn't exceed the parent */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    border: 2px solid #ff8c00;
+    border-radius: 8px;
+    background: rgba(60, 60, 60, 0.95);
+    color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Form Inputs on Focus */
+.add-student-section .mb-3 input:focus,
+.add-student-section .mb-3 select:focus {
+    border-color: #ffa726;
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
+
+/* Form Inputs Placeholder */
+.add-student-section .mb-3 input::placeholder {
+    color: #a0a0a0;
+}
+
+/* Ensure File Input Matches Other Inputs */
+.add-student-section .mb-3 input[type="file"] {
+    padding: 10px 15px; /* Match other inputs */
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #ff8c00;
+    border-radius: 8px;
+    background: rgba(60, 60, 60, 0.95);
+    color: #f5f5f5;
+}
+
+/* Bulk Upload Form Input */
+.add-student-section .login-box:nth-child(3) .mb-3 input[type="file"] {
+    padding: 10px 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Small Text Below Bulk Upload Input */
+.add-student-section .form-text {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+
+/* Button Container for Submit and Back to Dashboard */
+.add-student-section .button-container {
+    display: flex;
+    flex-direction: row; /* Change to row to place buttons side by side */
+    gap: 15px; /* Space between buttons */
+    margin-top: 20px; /* Space above buttons */
+    justify-content: center; /* Center the buttons horizontally */
+}
+
+/* Button Styling within Add a Student Section */
+.add-student-section .btn-primary,
+.add-student-section .btn-success {
+    padding: 12px 30px; /* Match other buttons */
+    border: none;
+    border-radius: 10px; /* Match button radius */
+    color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4), inset 0 -1px 3px rgba(0, 0, 0, 0.2); /* Match button shadow */
+    cursor: pointer;
+    animation: pulse 1.5s infinite; /* Reuse pulse animation */
+    text-decoration: none;
+    width: auto; /* Allow buttons to size naturally */
+    text-align: center; /* Center text */
+}
+
+/* Submit Button (btn-primary) */
+.add-student-section .btn-primary {
+    background: #ff8c00; /* Solid orange to match the theme */
+}
+
+/* Submit Button Hover */
+.add-student-section .btn-primary:hover {
+    background: #e07b00; /* Darker orange on hover */
+    animation: none; /* Stop pulse on hover */
+}
+
+/* Back to Dashboard Button (btn-success) */
+.add-student-section .btn-success {
+    background: linear-gradient(45deg, #ff8c00, #ffa726); /* Match other btn-success */
+}
+
+/* Back to Dashboard Button Hover */
+.add-student-section .btn-success:hover {
+    background: linear-gradient(45deg, #ffa726, #ff4500); /* Match other btn-success hover */
+    animation: none; /* Stop pulse on hover */
+}
+/* Style for Textarea in Feedback Form */
+.add-student-section textarea,
+.update-profile-container textarea {
+    padding: 10px 15px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #ff8c00;
+    border-radius: 8px;
+    background: rgba(60, 60, 60, 0.95);
+    color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    resize: vertical; /* Allow vertical resizing only */
+}
+
+.add-student-section textarea:focus,
+.update-profile-container textarea:focus {
+    border-color: #ffa726;
+    box-shadow: 0 0 5px rgba(255, 140, 0, 0.5);
+}
+
+/* Flash Message Styling for Success/Error */
+.alert-success {
+    background: rgba(40, 167, 69, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #28a745;
+    color: #28a745;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.alert-error {
+    background: rgba(255, 69, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ff4500;
+    color: #ff4500;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+/* Back to Dashboard Button */
+.back-to-dashboard {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color:#ff8c00; /* Green color similar to btn-success */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.back-to-dashboard:hover {
+    background-color:#ff8c00; /* Darker green on hover */
+    color: white;
+    text-decoration: none;
+}
+
+/* Review Feedback Button */
+.feedback-review {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color:#ff8c00; /* Blue color similar to btn-primary */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.feedback-review:hover {
+    background-color:#ff8c00; /* Darker blue on hover */
+    color: white;
+    text-decoration: none;
+}
+
+/* Ensure buttons align nicely in containers */
+.button-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.button-container a {
+    margin: 0 5px;
+}
+/* Styling for the Back to Dashboard button */
+.back-to-dashboard {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    background-color:#ff8c00; /* A coral shade to match a modern theme */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-dashboard:hover {
+    background-color:#ff8c00; /* Slightly darker shade on hover */
+    transform: scale(1.03); /* Subtle scale effect on hover */
+}
+
+.back-to-dashboard:active {
+    transform: scale(0.98); /* Slight press effect */
+}
+.delete-btn {
+    background-color:#ff8c00;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.delete-btn:hover {
+    background-color:#ff8c00;
+}
+/* static/css/style.css */
+
+/* Resume Button */
+.custom-btn.resume-btn {
+    background-color:#ff8c00;
+    color: white;
+}
+
+.custom-btn.resume-btn:hover {
+    background-color:#ff8c00;
+}
+
+/* View Resume Button */
+.custom-btn.view-resume-btn {
+    background-color: #ff8c00;
+    color: white;
+}
+
+.custom-btn.view-resume-btn:hover {
+    background-color: #ff8c00;
+}
+
+/* Modal Styling */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background-color:#ff8c00;
+    color: white;
+    border-bottom: none;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* Ensure consistency with existing buttons */
+.custom-btn {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}

@@ -1,0 +1,661 @@
+2025-03-17 15:36:06,617 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:36:06,617 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:36:06,617 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:36:06,617 - INFO - Scheduler started
+2025-03-17 15:36:06,617 - DEBUG - Looking for jobs to run
+2025-03-17 15:36:06,617 - INFO - Running job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-17 15:36:06 IST)" (scheduled at 2025-03-17 15:36:06.617530+05:30)
+2025-03-17 15:36:06,617 - DEBUG - Next wakeup is due at 2025-03-18 15:36:06.617530+05:30 (in 86400.000000 seconds)
+2025-03-17 15:36:06,617 - INFO - Attendance reminders are disabled.
+2025-03-17 15:36:06,627 - INFO - Job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-18 15:36:06 IST)" executed successfully
+2025-03-17 15:36:06,629 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:06,630 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:06,631 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:06,631 - ERROR - Sheet 'GENAI' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:06,642 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 15:36:06,642 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 15:36:06,643 - INFO -  * Restarting with stat
+2025-03-17 15:36:07,746 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:36:07,751 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:36:07,752 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:36:07,752 - INFO - Scheduler started
+2025-03-17 15:36:07,752 - DEBUG - Looking for jobs to run
+2025-03-17 15:36:07,752 - DEBUG - Next wakeup is due at 2025-03-18 15:36:07.750871+05:30 (in 86399.998545 seconds)
+2025-03-17 15:36:07,760 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:07,761 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:07,762 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:07,762 - ERROR - Sheet 'GENAI' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:36:07,769 - WARNING -  * Debugger is active!
+2025-03-17 15:36:07,769 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:36:12,887 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:12] "GET / HTTP/1.1" 200 -
+2025-03-17 15:36:12,913 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:12] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:36:12,918 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:12] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 15:36:12,927 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:12] "[35m[1mGET /static/videos/intro.mp4 HTTP/1.1[0m" 206 -
+2025-03-17 15:36:12,929 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:12] "[35m[1mGET /static/videos/intro.mp4 HTTP/1.1[0m" 206 -
+2025-03-17 15:36:19,416 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:19] "GET /home HTTP/1.1" 200 -
+2025-03-17 15:36:19,423 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:19] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:36:19,423 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:19] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:36:20,809 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:20] "GET /trainer_login HTTP/1.1" 200 -
+2025-03-17 15:36:20,823 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:20] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:36:20,823 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:20] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:36:26,481 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:26] "[32mPOST /trainer_login HTTP/1.1[0m" 302 -
+2025-03-17 15:36:26,500 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:36:26,510 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:36:26,511 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:36:26,511 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:36:26,583 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:26] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:36:26,608 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:36:26,608 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:26] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:36:40,704 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:36:40,713 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:36:40,713 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:36:40,713 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:36:40,713 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:40] "GET /trainer_dashboard?action=scan HTTP/1.1" 200 -
+2025-03-17 15:36:40,713 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:40] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:36:40,731 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:40] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:36:40,740 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:40] "[33mGET /static/sounds/scan-beep.mp3 HTTP/1.1[0m" 404 -
+2025-03-17 15:36:43,733 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:36:43,740 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:36:43,741 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:36:43,741 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:36:43,744 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:43] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:36:43,765 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:36:43,767 - INFO - 127.0.0.1 - - [17/Mar/2025 15:36:43] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:37:27,167 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:37:27,170 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:37:27,170 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:37:27,170 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:37:27,175 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:27] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:37:27,181 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:27] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:37:27,181 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:27] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:37:32,398 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:37:32,400 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:37:32,400 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:37:32,400 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:37:32,406 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:37:32,406 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:37:32,406 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:32] "GET /trainer_dashboard?action=today_excel HTTP/1.1" 200 -
+2025-03-17 15:37:32,423 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:32] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:37:32,423 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:32] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:37:41,282 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:37:41,288 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:37:41,288 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:37:41,288 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:37:41,288 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:41] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:37:41,309 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:41] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:37:41,311 - INFO - 127.0.0.1 - - [17/Mar/2025 15:37:41] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:10,788 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 15:40:10,943 - INFO -  * Restarting with stat
+2025-03-17 15:40:12,186 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:40:12,186 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:40:12,186 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:40:12,186 - INFO - Scheduler started
+2025-03-17 15:40:12,186 - DEBUG - Looking for jobs to run
+2025-03-17 15:40:12,186 - INFO - Running job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-17 15:40:12 IST)" (scheduled at 2025-03-17 15:40:12.186184+05:30)
+2025-03-17 15:40:12,186 - DEBUG - Next wakeup is due at 2025-03-18 15:40:12.186184+05:30 (in 86400.000000 seconds)
+2025-03-17 15:40:12,200 - INFO - Attendance reminders are disabled.
+2025-03-17 15:40:12,200 - INFO - Job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-18 15:40:12 IST)" executed successfully
+2025-03-17 15:40:12,206 - ERROR - Sheet 'GENAI' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:40:12,220 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:40:12,224 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:40:12,227 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:40:12,229 - WARNING -  * Debugger is active!
+2025-03-17 15:40:12,238 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:40:21,851 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:21,871 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:21,871 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:21,871 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:21,871 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:21,871 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:21,871 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:21,871 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:21,904 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:21] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:21,909 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:21] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:21,909 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:21] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:21,923 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:21] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 15:40:25,202 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:25,269 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:25,269 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:25,269 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:25,269 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:25,269 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:25,284 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:25,284 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:25,286 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:25] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:25,295 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:25] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:25,299 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:25] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:25,409 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:25,519 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:25,519 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:25,519 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:25,536 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:25,536 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:25,536 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:25,536 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:25,536 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:25] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:25,568 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:25] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:25,570 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:25] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:26,868 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:26,954 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:26,954 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:26,954 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:26,971 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:26,971 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:26,971 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:26,971 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:26,971 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:26] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:27,000 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:27] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:27,000 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:27] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:28,351 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:28,433 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:28,434 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:28,437 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:28,437 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:28,437 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:28,437 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:28,437 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:28,437 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:28] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:28,456 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:28] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:28,456 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:28] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:29,787 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:29,888 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:29,888 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:29,888 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:29,902 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:29,904 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:29,904 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:29,904 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:29,904 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:29] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:29,923 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:29,934 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:29] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:31,741 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:40:31,819 - DEBUG - Loaded attendance_sheet.xlsx with sheets: ['GENAI', 'JFS&UIUX', 'AWS&JAVA', 'REDHAT&AWS']
+2025-03-17 15:40:31,833 - DEBUG - Found date 17-03-2025 in sheet GENAI at column 5
+2025-03-17 15:40:31,835 - DEBUG - Found date 17-03-2025 in sheet JFS&UIUX at column 5
+2025-03-17 15:40:31,835 - DEBUG - Found date 17-03-2025 in sheet AWS&JAVA at column 4
+2025-03-17 15:40:31,835 - DEBUG - Found date 17-03-2025 in sheet REDHAT&AWS at column 4
+2025-03-17 15:40:31,835 - INFO - Retrieved 24 present and 324 absent students for 17-03-2025
+2025-03-17 15:40:31,835 - DEBUG - Dashboard stats - Present: 24, Absent: 324, Percentage: 6.896551724137931
+2025-03-17 15:40:31,835 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:31] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:40:31,860 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:31] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:40:31,862 - INFO - 127.0.0.1 - - [17/Mar/2025 15:40:31] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:40:58,601 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 15:40:58,731 - INFO -  * Restarting with stat
+2025-03-17 15:42:43,077 - INFO -  * Restarting with stat
+2025-03-17 15:42:44,232 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:42:44,232 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:42:44,232 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:42:44,232 - INFO - Scheduler started
+2025-03-17 15:42:44,232 - DEBUG - Looking for jobs to run
+2025-03-17 15:42:44,247 - INFO - Running job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-17 15:42:44 IST)" (scheduled at 2025-03-17 15:42:44.232800+05:30)
+2025-03-17 15:42:44,247 - DEBUG - Next wakeup is due at 2025-03-18 15:42:44.232800+05:30 (in 86399.985250 seconds)
+2025-03-17 15:42:44,247 - INFO - Attendance reminders are disabled.
+2025-03-17 15:42:44,248 - INFO - Job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-18 15:42:44 IST)" executed successfully
+2025-03-17 15:42:44,253 - ERROR - Sheet 'GENAI' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:44,268 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:44,268 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:44,272 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:44,279 - WARNING -  * Debugger is active!
+2025-03-17 15:42:44,281 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:42:45,289 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 15:42:45,426 - INFO -  * Restarting with stat
+2025-03-17 15:42:46,599 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:42:46,615 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:42:46,615 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:42:46,615 - INFO - Scheduler started
+2025-03-17 15:42:46,615 - DEBUG - Looking for jobs to run
+2025-03-17 15:42:46,620 - INFO - Running job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-17 15:42:46 IST)" (scheduled at 2025-03-17 15:42:46.615329+05:30)
+2025-03-17 15:42:46,620 - DEBUG - Next wakeup is due at 2025-03-18 15:42:46.615329+05:30 (in 86399.995212 seconds)
+2025-03-17 15:42:46,620 - INFO - Attendance reminders are disabled.
+2025-03-17 15:42:46,622 - INFO - Job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-18 15:42:46 IST)" executed successfully
+2025-03-17 15:42:46,635 - ERROR - Sheet 'GENAI' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:46,640 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:46,643 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:46,646 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:42:46,655 - WARNING -  * Debugger is active!
+2025-03-17 15:42:46,656 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:43:15,790 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 15:43:15,896 - INFO -  * Restarting with stat
+2025-03-17 15:43:17,047 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:43:17,064 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:43:17,066 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:43:17,066 - INFO - Scheduler started
+2025-03-17 15:43:17,067 - DEBUG - Looking for jobs to run
+2025-03-17 15:43:17,070 - DEBUG - Next wakeup is due at 2025-03-18 15:43:17.063163+05:30 (in 86399.993017 seconds)
+2025-03-17 15:43:17,071 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:43:17,075 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:43:17,075 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:43:17,076 - ERROR - Sheet 'GENAI' missing required columns: ['PIN (Roll.No)', 'NAME', 'BRANCH']
+2025-03-17 15:43:17,084 - WARNING -  * Debugger is active!
+2025-03-17 15:43:17,086 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:43:56,545 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:43:56,557 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:43:56,557 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 15:43:56,557 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 15:43:56,557 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 15:43:56,557 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 15:43:56,557 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 15:43:56,560 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 15:43:56,560 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 15:43:56,560 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 15:43:56,560 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:43:56,560 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:43:56,584 - INFO - 127.0.0.1 - - [17/Mar/2025 15:43:56] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:43:56,593 - INFO - 127.0.0.1 - - [17/Mar/2025 15:43:56] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:43:56,593 - INFO - 127.0.0.1 - - [17/Mar/2025 15:43:56] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:43:56,603 - INFO - 127.0.0.1 - - [17/Mar/2025 15:43:56] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 15:48:25,280 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:48:25,291 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:48:25,292 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:48:25,292 - INFO - Scheduler started
+2025-03-17 15:48:25,292 - DEBUG - Looking for jobs to run
+2025-03-17 15:48:25,303 - DEBUG - Next wakeup is due at 2025-03-18 15:48:25.280653+05:30 (in 86399.976951 seconds)
+2025-03-17 15:48:25,345 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 15:48:25,345 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 15:48:25,353 - INFO -  * Restarting with stat
+2025-03-17 15:48:27,906 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:48:27,906 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:48:27,917 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:48:27,917 - INFO - Scheduler started
+2025-03-17 15:48:27,919 - DEBUG - Looking for jobs to run
+2025-03-17 15:48:27,926 - DEBUG - Next wakeup is due at 2025-03-18 15:48:27.906450+05:30 (in 86399.980193 seconds)
+2025-03-17 15:48:27,959 - WARNING -  * Debugger is active!
+2025-03-17 15:48:27,963 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:49:05,860 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:49:05,868 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:49:05,868 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:49:05,868 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 15:49:05,868 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:49:05,868 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 15:49:05,875 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:49:05,875 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 15:49:05,875 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:49:05,875 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 15:49:05,875 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:49:05,875 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:49:05,930 - INFO - 127.0.0.1 - - [17/Mar/2025 15:49:05] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:49:05,943 - INFO - 127.0.0.1 - - [17/Mar/2025 15:49:05] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:49:05,946 - INFO - 127.0.0.1 - - [17/Mar/2025 15:49:05] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:49:05,963 - INFO - 127.0.0.1 - - [17/Mar/2025 15:49:05] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 15:49:54,929 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 15:49:55,195 - INFO -  * Restarting with stat
+2025-03-17 15:50:11,108 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:50:11,115 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:50:11,119 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:50:11,120 - INFO - Scheduler started
+2025-03-17 15:50:11,121 - DEBUG - Looking for jobs to run
+2025-03-17 15:50:11,132 - DEBUG - Next wakeup is due at 2025-03-18 15:50:11.115330+05:30 (in 86399.982957 seconds)
+2025-03-17 15:50:11,144 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:11,146 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:11,147 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:11,147 - ERROR - Sheet 'GENAI' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:11,168 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 15:50:11,168 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 15:50:11,168 - INFO -  * Restarting with stat
+2025-03-17 15:50:14,148 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:50:14,148 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:50:14,157 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:50:14,157 - INFO - Scheduler started
+2025-03-17 15:50:14,161 - DEBUG - Looking for jobs to run
+2025-03-17 15:50:14,162 - DEBUG - Next wakeup is due at 2025-03-18 15:50:14.148900+05:30 (in 86399.986308 seconds)
+2025-03-17 15:50:14,181 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:14,183 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:14,185 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:14,185 - ERROR - Sheet 'GENAI' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:50:14,196 - WARNING -  * Debugger is active!
+2025-03-17 15:50:14,206 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:51:43,781 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:51:43,781 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:51:43,791 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:51:43,792 - INFO - Scheduler started
+2025-03-17 15:51:43,793 - DEBUG - Looking for jobs to run
+2025-03-17 15:51:43,799 - DEBUG - Next wakeup is due at 2025-03-18 15:51:43.781616+05:30 (in 86399.981908 seconds)
+2025-03-17 15:51:43,814 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:43,817 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:43,818 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:43,820 - ERROR - Sheet 'GENAI' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:43,851 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 15:51:43,852 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 15:51:43,852 - INFO -  * Restarting with stat
+2025-03-17 15:51:46,464 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:51:46,477 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:51:46,477 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:51:46,477 - INFO - Scheduler started
+2025-03-17 15:51:46,482 - DEBUG - Looking for jobs to run
+2025-03-17 15:51:46,492 - DEBUG - Next wakeup is due at 2025-03-18 15:51:46.464590+05:30 (in 86399.981730 seconds)
+2025-03-17 15:51:46,499 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:46,504 - ERROR - Sheet 'REDHAT&AWS' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:46,504 - ERROR - Sheet 'JFS&UIUX' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:46,504 - ERROR - Sheet 'GENAI' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:51:46,517 - WARNING -  * Debugger is active!
+2025-03-17 15:51:46,526 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:52:38,079 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:52:38,079 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:52:38,092 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:52:38,092 - INFO - Scheduler started
+2025-03-17 15:52:38,094 - DEBUG - Looking for jobs to run
+2025-03-17 15:52:38,100 - DEBUG - Next wakeup is due at 2025-03-18 15:52:38.079605+05:30 (in 86399.979219 seconds)
+2025-03-17 15:52:38,109 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:52:38,145 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 15:52:38,145 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 15:52:38,145 - INFO -  * Restarting with stat
+2025-03-17 15:52:40,588 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:52:40,593 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:52:40,597 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:52:40,597 - INFO - Scheduler started
+2025-03-17 15:52:40,599 - DEBUG - Looking for jobs to run
+2025-03-17 15:52:40,610 - DEBUG - Next wakeup is due at 2025-03-18 15:52:40.593963+05:30 (in 86399.983723 seconds)
+2025-03-17 15:52:40,618 - ERROR - Sheet 'AWS&JAVA' missing required columns: ['Pin', 'Name', 'Branch']
+2025-03-17 15:52:40,643 - WARNING -  * Debugger is active!
+2025-03-17 15:52:40,644 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:53:29,150 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:53:29,166 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:53:29,171 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:53:29,171 - INFO - Scheduler started
+2025-03-17 15:53:29,171 - DEBUG - Looking for jobs to run
+2025-03-17 15:53:29,174 - DEBUG - Next wakeup is due at 2025-03-18 15:53:29.166063+05:30 (in 86399.991614 seconds)
+2025-03-17 15:53:29,202 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 15:53:29,215 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 15:53:29,218 - INFO -  * Restarting with stat
+2025-03-17 15:53:31,648 - DEBUG - Looking up time zone info from registry
+2025-03-17 15:53:31,648 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 15:53:31,662 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 15:53:31,662 - INFO - Scheduler started
+2025-03-17 15:53:31,662 - DEBUG - Looking for jobs to run
+2025-03-17 15:53:31,671 - DEBUG - Next wakeup is due at 2025-03-18 15:53:31.648081+05:30 (in 86399.976156 seconds)
+2025-03-17 15:53:31,685 - WARNING -  * Debugger is active!
+2025-03-17 15:53:31,698 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 15:54:56,214 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:54:56,230 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:54:56,230 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:54:56,230 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 15:54:56,230 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:54:56,230 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 15:54:56,241 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:54:56,243 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 15:54:56,243 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:54:56,243 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 15:54:56,245 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:54:56,245 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:54:56,331 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:56] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:54:56,346 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:56] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:54:56,346 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:56] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:54:56,370 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:56] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 15:54:59,860 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:59] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-03-17 15:54:59,888 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:59] "GET /home HTTP/1.1" 200 -
+2025-03-17 15:54:59,908 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:59] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:54:59,912 - INFO - 127.0.0.1 - - [17/Mar/2025 15:54:59] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:55:01,513 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:01] "GET /trainer_login HTTP/1.1" 200 -
+2025-03-17 15:55:01,529 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:01] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:55:01,532 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:01] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:55:07,586 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:07] "[32mPOST /trainer_login HTTP/1.1[0m" 302 -
+2025-03-17 15:55:07,586 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 15:55:07,602 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 15:55:07,617 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:55:07,618 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 15:55:07,618 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:55:07,618 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 15:55:07,618 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:55:07,618 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 15:55:07,622 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 15:55:07,623 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 15:55:07,623 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 15:55:07,623 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 15:55:07,625 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:07] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 15:55:07,650 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:07] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 15:55:07,650 - INFO - 127.0.0.1 - - [17/Mar/2025 15:55:07] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 15:58:28,653 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 15:58:28,896 - INFO -  * Restarting with stat
+2025-03-17 16:00:42,057 - DEBUG - Looking up time zone info from registry
+2025-03-17 16:00:42,063 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 16:00:42,070 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 16:00:42,072 - INFO - Scheduler started
+2025-03-17 16:00:42,073 - DEBUG - Looking for jobs to run
+2025-03-17 16:00:42,081 - DEBUG - Next wakeup is due at 2025-03-18 16:00:42.063269+05:30 (in 86399.981618 seconds)
+2025-03-17 16:00:42,121 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 16:00:42,121 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 16:00:42,121 - INFO -  * Restarting with stat
+2025-03-17 16:00:44,502 - DEBUG - Looking up time zone info from registry
+2025-03-17 16:00:44,512 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 16:00:44,518 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 16:00:44,518 - INFO - Scheduler started
+2025-03-17 16:00:44,518 - DEBUG - Looking for jobs to run
+2025-03-17 16:00:44,526 - DEBUG - Next wakeup is due at 2025-03-18 16:00:44.512954+05:30 (in 86399.986110 seconds)
+2025-03-17 16:00:44,548 - WARNING -  * Debugger is active!
+2025-03-17 16:00:44,552 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 16:01:43,685 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 16:01:43,701 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 16:01:43,701 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:43,717 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 16:01:43,717 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:43,717 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 16:01:43,717 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:43,717 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 16:01:43,717 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:43,717 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 16:01:43,717 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 16:01:43,717 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 16:01:43,812 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:43] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 16:01:43,828 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:01:43,828 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:43] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:01:43,844 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:43] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 16:01:49,289 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:49] "[32mGET /logout HTTP/1.1[0m" 302 -
+2025-03-17 16:01:49,304 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:49] "GET /home HTTP/1.1" 200 -
+2025-03-17 16:01:49,320 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:49] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:01:49,320 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:49] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:01:50,973 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:50] "GET /trainer_login HTTP/1.1" 200 -
+2025-03-17 16:01:50,988 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:50] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:01:50,988 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:50] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:01:56,803 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 16:01:56,803 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:56,803 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 16:01:56,803 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:56,803 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 16:01:56,803 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:56,803 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 16:01:56,803 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:01:56,815 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 16:01:56,815 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 16:01:56,815 - INFO - No attendance data found for today. Running auto_upload_test on startup.
+2025-03-17 16:01:56,815 - INFO - Starting auto_upload_test route
+2025-03-17 16:01:56,815 - DEBUG - Retrieved 351 students from database
+2025-03-17 16:01:56,815 - INFO - Padded student list to 400 students
+2025-03-17 16:01:56,832 - DEBUG - Loaded existing attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI']
+2025-03-17 16:01:56,832 - INFO - Created new sheet for course Unknown
+2025-03-17 16:01:56,832 - DEBUG - Added 3 students to sheet Unknown
+2025-03-17 16:01:56,841 - INFO - Added 180 days of 'Present' status for course Unknown
+2025-03-17 16:01:56,841 - DEBUG - Cleared existing attendance columns in sheet JFS&UIUX
+2025-03-17 16:01:56,847 - DEBUG - Added 143 students to sheet JFS&UIUX
+2025-03-17 16:01:56,989 - INFO - Added 180 days of 'Present' status for course JFS&UIUX
+2025-03-17 16:01:56,989 - INFO - Created new sheet for course Dummy Course
+2025-03-17 16:01:56,989 - DEBUG - Added 49 students to sheet Dummy Course
+2025-03-17 16:01:57,056 - INFO - Added 180 days of 'Present' status for course Dummy Course
+2025-03-17 16:01:57,056 - DEBUG - Cleared existing attendance columns in sheet REDHAT&AWS
+2025-03-17 16:01:57,056 - DEBUG - Added 40 students to sheet REDHAT&AWS
+2025-03-17 16:01:57,170 - INFO - Added 180 days of 'Present' status for course REDHAT&AWS
+2025-03-17 16:01:57,170 - DEBUG - Cleared existing attendance columns in sheet GENAI
+2025-03-17 16:01:57,170 - DEBUG - Added 149 students to sheet GENAI
+2025-03-17 16:01:57,322 - INFO - Added 180 days of 'Present' status for course GENAI
+2025-03-17 16:01:57,322 - DEBUG - Cleared existing attendance columns in sheet AWS&JAVA
+2025-03-17 16:01:57,322 - DEBUG - Added 16 students to sheet AWS&JAVA
+2025-03-17 16:01:57,338 - INFO - Added 180 days of 'Present' status for course AWS&JAVA
+2025-03-17 16:01:58,689 - ERROR - Error fetching Excel attendance for 17-03-2025: File is not a zip file
+2025-03-17 16:01:58,689 - INFO - No attendance data found for today. Running auto_upload_test on startup.
+2025-03-17 16:01:58,690 - INFO - Starting auto_upload_test route
+2025-03-17 16:01:58,694 - DEBUG - Retrieved 351 students from database
+2025-03-17 16:01:58,694 - INFO - Padded student list to 400 students
+2025-03-17 16:01:58,980 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:58] "[35m[1mPOST /trainer_login HTTP/1.1[0m" 500 -
+2025-03-17 16:01:58,996 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:58] "GET /trainer_login?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-03-17 16:01:59,024 - INFO - Successfully saved attd.xlsx
+2025-03-17 16:01:59,025 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:59] "GET /trainer_login?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-03-17 16:01:59,025 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:59] "[32mPOST /trainer_login HTTP/1.1[0m" 302 -
+2025-03-17 16:01:59,037 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:59] "GET /trainer_login?__debugger__=yes&cmd=resource&f=console.png&s=uWInjCECTixFcVOhKcBf HTTP/1.1" 200 -
+2025-03-17 16:01:59,072 - INFO - 127.0.0.1 - - [17/Mar/2025 16:01:59] "GET /trainer_login?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-03-17 16:02:24,917 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 16:02:25,217 - INFO -  * Restarting with stat
+2025-03-17 16:06:04,356 - DEBUG - Looking up time zone info from registry
+2025-03-17 16:06:04,366 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 16:06:04,366 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 16:06:04,366 - INFO - Scheduler started
+2025-03-17 16:06:04,366 - DEBUG - Looking for jobs to run
+2025-03-17 16:06:04,379 - DEBUG - Next wakeup is due at 2025-03-18 16:06:04.356967+05:30 (in 86399.977104 seconds)
+2025-03-17 16:06:04,395 - ERROR - Sheet 'AWS&JAVA' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:04,398 - ERROR - Sheet 'REDHAT&AWS' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:04,398 - ERROR - Sheet 'JFS&UIUX' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:04,398 - ERROR - Sheet 'GENAI' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:04,402 - ERROR - Sheet 'Unknown' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:04,403 - ERROR - Sheet 'Dummy Course' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:04,430 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 16:06:04,430 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 16:06:04,430 - INFO -  * Restarting with stat
+2025-03-17 16:06:06,921 - DEBUG - Looking up time zone info from registry
+2025-03-17 16:06:06,938 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 16:06:06,943 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 16:06:06,944 - INFO - Scheduler started
+2025-03-17 16:06:06,944 - DEBUG - Looking for jobs to run
+2025-03-17 16:06:06,954 - DEBUG - Next wakeup is due at 2025-03-18 16:06:06.938680+05:30 (in 86399.984486 seconds)
+2025-03-17 16:06:06,962 - ERROR - Sheet 'AWS&JAVA' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:06,969 - ERROR - Sheet 'REDHAT&AWS' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:06,969 - ERROR - Sheet 'JFS&UIUX' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:06,974 - ERROR - Sheet 'GENAI' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:06,976 - ERROR - Sheet 'Unknown' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:06,976 - ERROR - Sheet 'Dummy Course' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:06:06,998 - WARNING -  * Debugger is active!
+2025-03-17 16:06:07,005 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 16:08:25,391 - DEBUG - Looking up time zone info from registry
+2025-03-17 16:08:25,395 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 16:08:25,395 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 16:08:25,395 - INFO - Scheduler started
+2025-03-17 16:08:25,395 - DEBUG - Looking for jobs to run
+2025-03-17 16:08:25,406 - INFO - Running job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-17 16:08:25 IST)" (scheduled at 2025-03-17 16:08:25.395006+05:30)
+2025-03-17 16:08:25,406 - DEBUG - Next wakeup is due at 2025-03-18 16:08:25.395006+05:30 (in 86399.988253 seconds)
+2025-03-17 16:08:25,406 - INFO - Attendance reminders are disabled.
+2025-03-17 16:08:25,406 - INFO - Job "check_absent_students (trigger: interval[1 day, 0:00:00], next run at: 2025-03-18 16:08:25 IST)" executed successfully
+2025-03-17 16:08:25,420 - ERROR - Sheet 'REDHAT&AWS' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:08:25,427 - ERROR - Sheet 'Unknown' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:08:25,427 - ERROR - Sheet 'Dummy Course' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:08:25,446 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-03-17 16:08:25,446 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-17 16:08:25,446 - INFO -  * Restarting with stat
+2025-03-17 16:08:28,231 - DEBUG - Looking up time zone info from registry
+2025-03-17 16:08:28,247 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-03-17 16:08:28,248 - INFO - Added job "check_absent_students" to job store "default"
+2025-03-17 16:08:28,248 - INFO - Scheduler started
+2025-03-17 16:08:28,251 - DEBUG - Looking for jobs to run
+2025-03-17 16:08:28,261 - DEBUG - Next wakeup is due at 2025-03-18 16:08:28.231537+05:30 (in 86399.970425 seconds)
+2025-03-17 16:08:28,274 - ERROR - Sheet 'REDHAT&AWS' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:08:28,275 - ERROR - Sheet 'Unknown' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:08:28,275 - ERROR - Sheet 'Dummy Course' missing required columns (Pin, Name, Branch) or variants
+2025-03-17 16:08:28,293 - WARNING -  * Debugger is active!
+2025-03-17 16:08:28,299 - INFO -  * Debugger PIN: 108-649-211
+2025-03-17 16:08:32,808 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:32] "GET / HTTP/1.1" 200 -
+2025-03-17 16:08:32,842 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:32] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:08:32,844 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:32] "[35m[1mGET /static/videos/intro.mp4 HTTP/1.1[0m" 206 -
+2025-03-17 16:08:32,862 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:32] "[36mGET /static/images/background.jpg HTTP/1.1[0m" 304 -
+2025-03-17 16:08:38,099 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:38] "GET /home HTTP/1.1" 200 -
+2025-03-17 16:08:38,123 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:38] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:08:38,127 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:38] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:08:41,463 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:41] "GET /trainer_login HTTP/1.1" 200 -
+2025-03-17 16:08:41,487 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:41] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:08:41,487 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:41] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:08:47,509 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI', 'Unknown', 'Dummy Course']
+2025-03-17 16:08:47,509 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:47,509 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 16:08:47,509 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:47,509 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 16:08:47,509 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:47,509 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 16:08:47,509 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:47,509 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 16:08:47,519 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:47,519 - WARNING - Date 17-03-2025 not found in sheet Unknown
+2025-03-17 16:08:47,519 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:47,519 - WARNING - Date 17-03-2025 not found in sheet Dummy Course
+2025-03-17 16:08:47,519 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 16:08:47,525 - INFO - No attendance data found for today. Running auto_upload_test on startup.
+2025-03-17 16:08:47,525 - INFO - Starting auto_upload_test route
+2025-03-17 16:08:47,525 - DEBUG - Retrieved 351 students from database
+2025-03-17 16:08:47,525 - INFO - Padded student list to 400 students
+2025-03-17 16:08:47,543 - DEBUG - Loaded existing attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI', 'Unknown', 'Dummy Course']
+2025-03-17 16:08:47,543 - DEBUG - Cleared existing attendance columns in sheet AWS&JAVA
+2025-03-17 16:08:47,543 - DEBUG - Added 16 students to sheet AWS&JAVA
+2025-03-17 16:08:47,574 - INFO - Added 180 days of 'Present' status for course AWS&JAVA
+2025-03-17 16:08:47,574 - DEBUG - Cleared existing attendance columns in sheet REDHAT&AWS
+2025-03-17 16:08:47,574 - DEBUG - Added 40 students to sheet REDHAT&AWS
+2025-03-17 16:08:47,620 - INFO - Added 180 days of 'Present' status for course REDHAT&AWS
+2025-03-17 16:08:47,620 - DEBUG - Cleared existing attendance columns in sheet Unknown
+2025-03-17 16:08:47,620 - DEBUG - Added 3 students to sheet Unknown
+2025-03-17 16:08:47,641 - INFO - Added 180 days of 'Present' status for course Unknown
+2025-03-17 16:08:47,641 - DEBUG - Cleared existing attendance columns in sheet JFS&UIUX
+2025-03-17 16:08:47,647 - DEBUG - Added 143 students to sheet JFS&UIUX
+2025-03-17 16:08:47,790 - INFO - Added 180 days of 'Present' status for course JFS&UIUX
+2025-03-17 16:08:47,790 - DEBUG - Cleared existing attendance columns in sheet Dummy Course
+2025-03-17 16:08:47,790 - DEBUG - Added 49 students to sheet Dummy Course
+2025-03-17 16:08:47,914 - INFO - Added 180 days of 'Present' status for course Dummy Course
+2025-03-17 16:08:47,914 - DEBUG - Cleared existing attendance columns in sheet GENAI
+2025-03-17 16:08:47,922 - DEBUG - Added 149 students to sheet GENAI
+2025-03-17 16:08:48,068 - INFO - Added 180 days of 'Present' status for course GENAI
+2025-03-17 16:08:48,068 - ERROR - Error in auto_upload_test: [Errno 13] Permission denied: 'attd.xlsx'
+2025-03-17 16:08:48,068 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:48] "[32mPOST /trainer_login HTTP/1.1[0m" 302 -
+2025-03-17 16:08:48,089 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 16:08:48,104 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI', 'Unknown', 'Dummy Course']
+2025-03-17 16:08:48,104 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:48,104 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 16:08:48,104 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:48,104 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 16:08:48,104 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:48,104 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 16:08:48,104 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:48,104 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 16:08:48,112 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:48,112 - WARNING - Date 17-03-2025 not found in sheet Unknown
+2025-03-17 16:08:48,112 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:48,112 - WARNING - Date 17-03-2025 not found in sheet Dummy Course
+2025-03-17 16:08:48,112 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 16:08:48,112 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 16:08:48,192 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:48] "GET /trainer_dashboard HTTP/1.1" 200 -
+2025-03-17 16:08:48,211 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:48] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:08:48,211 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:48] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:08:57,695 - DEBUG - Total students in database: 351, Missing photos: 0
+2025-03-17 16:08:57,717 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI', 'Unknown', 'Dummy Course']
+2025-03-17 16:08:57,717 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,720 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 16:08:57,720 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,720 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 16:08:57,720 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,720 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 16:08:57,720 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,720 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 16:08:57,720 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:57,720 - WARNING - Date 17-03-2025 not found in sheet Unknown
+2025-03-17 16:08:57,720 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:57,720 - WARNING - Date 17-03-2025 not found in sheet Dummy Course
+2025-03-17 16:08:57,727 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 16:08:57,727 - DEBUG - Dashboard stats - Present: 0, Absent: 0, Percentage: 0
+2025-03-17 16:08:57,743 - DEBUG - Loaded attd.xlsx with sheets: ['AWS&JAVA', 'REDHAT&AWS', 'JFS&UIUX', 'GENAI', 'Unknown', 'Dummy Course']
+2025-03-17 16:08:57,743 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,743 - WARNING - Date 17-03-2025 not found in sheet AWS&JAVA
+2025-03-17 16:08:57,743 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,743 - WARNING - Date 17-03-2025 not found in sheet REDHAT&AWS
+2025-03-17 16:08:57,743 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,743 - WARNING - Date 17-03-2025 not found in sheet JFS&UIUX
+2025-03-17 16:08:57,751 - DEBUG - Date 17-03-2025 not found in columns 4 to 3
+2025-03-17 16:08:57,751 - WARNING - Date 17-03-2025 not found in sheet GENAI
+2025-03-17 16:08:57,752 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:57,752 - WARNING - Date 17-03-2025 not found in sheet Unknown
+2025-03-17 16:08:57,754 - DEBUG - Date 17-03-2025 not found in columns 4 to 1
+2025-03-17 16:08:57,754 - WARNING - Date 17-03-2025 not found in sheet Dummy Course
+2025-03-17 16:08:57,754 - INFO - Retrieved 0 present and 0 absent students for 17-03-2025
+2025-03-17 16:08:57,754 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:57] "GET /trainer_dashboard?action=today_excel HTTP/1.1" 200 -
+2025-03-17 16:08:57,775 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:57] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2025-03-17 16:08:57,775 - INFO - 127.0.0.1 - - [17/Mar/2025 16:08:57] "[36mGET /static/js/script.js HTTP/1.1[0m" 304 -
+2025-03-17 16:09:19,835 - INFO -  * Detected change in 'C:\\Users\\lokesh\\attendence\\attendence_web\\app.py', reloading
+2025-03-17 16:09:20,180 - INFO -  * Restarting with stat

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="hero text-center animate__animated animate__zoomIn">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="TECHWING" class="img-fluid" style="width: 150px;">
+        <hr class="my-4">
+        <h1 class="display-4">Welcome to TECHWING</h1>
+        <p class="lead">Streamline Attendance with Innovation</p>
+        <hr class="my-4">
+        <div class="mt-4">
+            <a href="{{ url_for('student_login') }}" class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">Student Login</a>
+            <a href="{{ url_for('trainer_login') }}" class="btn btn-success btn-lg animate__animated animate__pulse animate__infinite">Trainer Login</a>
+        
+
+        </div>
+    </div>
+{% endblock %}
