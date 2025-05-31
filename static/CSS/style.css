@@ -1,6 +1,6 @@
 /* General Styling with Background Image and Dark Mode */
 body {
-    background: url('../images/background.jpg') no-repeat center center fixed;
+    background: url('/static/images/background.jpg') no-repeat center center fixed, #1a1a1a; /* Fallback color */
     background-size: cover;
     min-height: 100vh;
     font-family: 'Arial', sans-serif;
@@ -8,18 +8,6 @@ body {
     margin: 0;
     padding: 0;
     animation: fadeIn 1.5s ease-in-out;
-}
-/* Target the Student Login button when clicked */
-.btn-primary:active {
-    background-color: #ff8c00 !important; /* Change background color to #ff8c00 on click */
-    border-color: #ff8c00 !important; /* Optional: Change border color to match */
-    color: #fff !important; /* Ensure text color remains white for contrast */
-}
-
-/* Optional: If you want to change the hover state as well */
-.btn-primary:hover {
-    background-color: #e07b00; /* Slightly darker shade for hover */
-    border-color: #e07b00;
 }
 
 @keyframes fadeIn {
@@ -36,6 +24,9 @@ body {
     border: 2px solid #ff8c00;
     margin: 25px auto;
     max-width: 95%;
+    display: flex; /* Center content */
+    flex-direction: column;
+    align-items: center;
     animation: scaleIn 0.8s ease-out;
 }
 
@@ -50,6 +41,9 @@ body {
     border-bottom: 4px solid #ff8c00;
     padding: 10px 20px;
     animation: slideDown 0.6s ease-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 @keyframes slideDown {
@@ -62,21 +56,26 @@ body {
     padding: 60px 0;
     color: #f5f5f5;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 50vh;
 }
 
-/* Heading Styling (No Animation for Welcome Text) */
-h1, h2, h5 {
+/* Heading Styling */
+h1, h2, h3, h5 {
     font-family: 'Roboto', sans-serif;
     color: #ff8c00;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    position: relative;
-    display: inline-block;
     padding: 0 10px 5px 10px;
     border-bottom: 3px solid #ffa726;
+    margin: 0 auto;
 }
 
-/* Specific Style for Welcome Text (No Animation) */
+/* Specific Style for Welcome Text */
 .welcome-text {
     font-family: 'Roboto', sans-serif;
     color: #ff8c00;
@@ -84,6 +83,14 @@ h1, h2, h5 {
     letter-spacing: 1.5px;
     padding: 0 10px 5px 10px;
     border-bottom: 3px solid #ffa726;
+}
+
+/* Tagline Styling */
+.hero h5, .hero p {
+    font-family: 'Roboto', sans-serif;
+    color: #f5f5f5;
+    font-size: 1.2rem;
+    margin-top: 10px;
 }
 
 /* Login Box with 50% Transparency and Bounce In */
@@ -96,6 +103,9 @@ h1, h2, h5 {
     box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
     border: 1px solid #ff8c00;
     animation: bounceIn 1s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @keyframes bounceIn {
@@ -104,15 +114,18 @@ h1, h2, h5 {
     100% { transform: scale(1); }
 }
 
-/* Login Box Button Layout */
+/* Login Box Form Layout */
 .login-box form {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    width: 100%;
+    align-items: center;
 }
 
 .login-box button, .login-box a.btn-success {
     width: 100%;
+    max-width: 200px;
     text-align: center;
 }
 
@@ -120,6 +133,9 @@ h1, h2, h5 {
 .dashboard {
     padding: 25px;
     animation: fadeUp 1s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 @keyframes fadeUp {
@@ -127,7 +143,7 @@ h1, h2, h5 {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Card Styling (No Flip Animation) */
+/* Card Styling */
 .card {
     background: rgba(70, 70, 70, 0.95);
     border: 2px solid #ff8c00;
@@ -145,17 +161,15 @@ h1, h2, h5 {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     border-bottom: 2px solid #ff8c00;
-    backface-visibility: hidden;
 }
 
 /* Card Body */
 .card-body {
     padding: 20px;
     color: #f5f5f5;
-    backface-visibility: hidden;
 }
 
-/* Card Title (No Animation, Reduced Fade) */
+/* Card Title */
 .card-title {
     font-size: 1.6rem;
     font-weight: bold;
@@ -180,9 +194,9 @@ h1, h2, h5 {
 /* Button Styling with Pulse Animation */
 .btn-primary, .btn-success, .blink-btn, .btn-info, .btn-warning {
     padding: 12px 30px;
-    border: none;
+    border: none !important;
     border-radius: 10px;
-    color: #ffffff;
+    color: #ffffff !important;
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
     text-transform: uppercase;
@@ -191,6 +205,8 @@ h1, h2, h5 {
     cursor: pointer;
     animation: pulse 1.5s infinite;
     text-decoration: none;
+    min-width: 200px;
+    text-align: center;
 }
 
 @keyframes pulse {
@@ -207,24 +223,29 @@ h1, h2, h5 {
 
 /* Button Variants with Consistent Orange Theme */
 .btn-primary {
-    background: #ff8c00; /* Solid orange color */
+    background: #ff8c00 !important;
 }
 
 .btn-primary:hover {
-    background: #ff8c00; /* Darker orange on hover */
+    background: #e07b00 !important;
+}
+
+.btn-primary:active {
+    background-color: #ff8c00 !important;
+    border-color: #ff8c00 !important;
+    color: #fff !important;
 }
 
 .btn-success {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .btn-success:hover {
-    background: linear-gradient(45deg, #ffa726, #ff4500);
+    background: linear-gradient(45deg, #ffa726, #ff4500) !important;
 }
 
 .blink-btn {
-    background: linear-gradient(45deg, #ff4500, #ff8c00);
-    padding: 10px 25px;
+    background: linear-gradient(45deg, #ff4500, #ff8c00) !important;
     animation: blink 1s infinite;
 }
 
@@ -235,21 +256,19 @@ h1, h2, h5 {
 }
 
 .btn-info {
-    background: linear-gradient(45deg, #ff8c00, #ffc107);
-    color: #f4eaea;
+    background: linear-gradient(45deg, #ff8c00, #ffc107) !important;
 }
 
 .btn-info:hover {
-    background: linear-gradient(45deg, #ff8c00, #ffc107);
+    background: linear-gradient(45deg, #ff8c00, #ffc107) !important;
 }
 
 .btn-warning {
-    background: linear-gradient(45deg, #ff8c00, #ffc107);
-    color: #eaeef3;
+    background: linear-gradient(45deg, #ff8c00, #ffc107) !important;
 }
 
 .btn-warning:hover {
-    background: linear-gradient(45deg, #ffc107, #ff8c00);
+    background: linear-gradient(45deg, #ffc107, #ff8c00) !important;
 }
 
 /* Search Container */
@@ -345,6 +364,7 @@ h1, h2, h5 {
 /* Initial Buttons Layout (Side-by-Side with Flexbox) */
 .initial-buttons {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
@@ -384,67 +404,83 @@ h1, h2, h5 {
 
 /* Button Variants with Consistent Orange Theme */
 .scan-btn {
-    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    background: linear-gradient(45deg, #ff4500, #ff8c00) !important;
 }
 
 .scan-btn:hover {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .face-btn {
-    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    background: linear-gradient(45deg, #ff4500, #ff8c00) !important;
 }
 
 .face-btn:hover {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .details-btn {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .details-btn:hover {
-    background: linear-gradient(45deg, #ffa726, #ff4500);
+    background: linear-gradient(45deg, #ffa726, #ff4500) !important;
 }
 
 .add-btn {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .add-btn:hover {
-    background: linear-gradient(45deg, #ffa726, #ff4500);
+    background: linear-gradient(45deg, #ffa726, #ff4500) !important;
 }
 
 .bulk-btn {
-    background: #ff8c00; /* Solid orange for Bulk Upload Students */
+    background: #ff8c00 !important;
 }
 
 .bulk-btn:hover {
-    background: #e07b00; /* Darker orange on hover */
+    background: #e07b00 !important;
 }
 
 .excel-btn {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .excel-btn:hover {
-    background: linear-gradient(45deg, #ffa726, #ff4500);
+    background: linear-gradient(45deg, #ffa726, #ff4500) !important;
 }
 
 .gsheets-btn {
-    background: linear-gradient(45deg, #ff8c00, #ffc107);
+    background: linear-gradient(45deg, #ff8c00, #ffc107) !important;
 }
 
 .gsheets-btn:hover {
-    background: linear-gradient(45deg, #ffc107, #ff8c00);
+    background: linear-gradient(45deg, #ffc107, #ff8c00) !important;
 }
 
 .announce-btn {
-    background: linear-gradient(45deg, #ff4500, #ff8c00);
+    background: linear-gradient(45deg, #ff4500, #ff8c00) !important;
 }
 
 .announce-btn:hover {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
+}
+
+.resume-btn {
+    background: #ff8c00 !important;
+}
+
+.resume-btn:hover {
+    background: #e07b00 !important;
+}
+
+.view-resume-btn {
+    background: #ff8c00 !important;
+}
+
+.view-resume-btn:hover {
+    background: #e07b00 !important;
 }
 
 /* Hover Effects for Custom Buttons */
@@ -474,6 +510,9 @@ h1, h2, h5 {
 .scan-section, .add-student-section, .search-section, .attendance-section {
     margin-top: 30px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .scan-section h3, .add-student-section h3, .search-section h3, .attendance-section h3 {
@@ -489,11 +528,12 @@ h1, h2, h5 {
 
 .mb-3 {
     margin-bottom: 15px;
+    width: 100%;
+    max-width: 500px;
 }
 
 /* Scan Section */
 .scan-section {
-    text-align: center;
     margin-top: 40px;
     animation: fadeIn 0.8s ease-in-out;
 }
@@ -523,6 +563,8 @@ h1, h2, h5 {
 /* Attendance Section */
 .attendance-section {
     text-align: left;
+    width: 100%;
+    max-width: 1200px;
 }
 
 .attendance-table {
@@ -564,6 +606,7 @@ h1, h2, h5 {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .summary-stats p {
@@ -609,6 +652,8 @@ h1, h2, h5 {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
+    max-width: 500px;
 }
 
 .password-container .toggle-password {
@@ -620,7 +665,8 @@ h1, h2, h5 {
 }
 
 .password-container .toggle-password:hover {
-    color: #ffa726;
+    color: #ffa))
+726;
 }
 
 /* Forgot Password Link */
@@ -666,6 +712,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .student-info {
@@ -689,6 +738,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(255, 140, 0, 0.1);
     border: 1px solid #ff8c00;
+    width: 100%;
+    max-width: 800px;
 }
 
 .attendance-summary h3, .recent-history h3, .announcements h3, .quick-links h3, .attendance-trend h3 {
@@ -746,12 +797,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .logout-btn {
-    background: linear-gradient(45deg, #ff4500, #ff8c00);
-    color: white;
+    background: linear-gradient(45deg, #ff4500, #ff8c00) !important;
 }
 
 .logout-btn:hover {
-    background: linear-gradient(45deg, #ff8c00, #ffa726);
+    background: linear-gradient(45deg, #ff8c00, #ffa726) !important;
 }
 
 .chart-container {
@@ -825,14 +875,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
     border: 2px solid #ff8c00;
-    margin: 25px auto
+    margin: 25px auto;
+    max-width: 600px;
 }
 
 /* Add a Student Section Styling with Fade In Animation */
 .add-student-section {
-    max-width: 600px; /* Existing container width */
+    max-width: 600px;
     margin: 30px auto;
-    padding: 25px; /* Padding around the entire section */
+    padding: 25px;
     background: rgba(50, 50, 50, 0.95);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
@@ -842,9 +893,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Form Styling within Add a Student Section */
 .add-student-section .login-box {
-    max-width: 100%; /* Ensure the form takes full width of the container */
+    max-width: 100%;
     margin: 0;
-    padding: 0; /* Remove padding since the parent container handles it */
+    padding: 0;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -880,9 +931,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .add-student-section .mb-3 input,
 .add-student-section .mb-3 select {
     padding: 10px 15px;
-    width: 100%; /* Full width of the parent (.mb-3) */
-    max-width: 100%; /* Ensure it doesn't exceed the parent */
-    box-sizing: border-box; /* Include padding and border in width calculation */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     border: 2px solid #ff8c00;
     border-radius: 8px;
     background: rgba(60, 60, 60, 0.95);
@@ -907,7 +958,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Ensure File Input Matches Other Inputs */
 .add-student-section .mb-3 input[type="file"] {
-    padding: 10px 15px; /* Match other inputs */
+    padding: 10px 15px;
     width: 100%;
     box-sizing: border-box;
     border: 2px solid #ff8c00;
@@ -930,56 +981,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     margin-top: 5px;
 }
 
-
 /* Button Container for Submit and Back to Dashboard */
 .add-student-section .button-container {
     display: flex;
-    flex-direction: row; /* Change to row to place buttons side by side */
-    gap: 15px; /* Space between buttons */
-    margin-top: 20px; /* Space above buttons */
-    justify-content: center; /* Center the buttons horizontally */
+    flex-direction: row;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
 }
 
-/* Button Styling within Add a Student Section */
-.add-student-section .btn-primary,
-.add-student-section .btn-success {
-    padding: 12px 30px; /* Match other buttons */
-    border: none;
-    border-radius: 10px; /* Match button radius */
-    color: #ffffff;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4), inset 0 -1px 3px rgba(0, 0, 0, 0.2); /* Match button shadow */
-    cursor: pointer;
-    animation: pulse 1.5s infinite; /* Reuse pulse animation */
-    text-decoration: none;
-    width: auto; /* Allow buttons to size naturally */
-    text-align: center; /* Center text */
-}
-
-/* Submit Button (btn-primary) */
-.add-student-section .btn-primary {
-    background: #ff8c00; /* Solid orange to match the theme */
-}
-
-/* Submit Button Hover */
-.add-student-section .btn-primary:hover {
-    background: #e07b00; /* Darker orange on hover */
-    animation: none; /* Stop pulse on hover */
-}
-
-/* Back to Dashboard Button (btn-success) */
-.add-student-section .btn-success {
-    background: linear-gradient(45deg, #ff8c00, #ffa726); /* Match other btn-success */
-}
-
-/* Back to Dashboard Button Hover */
-.add-student-section .btn-success:hover {
-    background: linear-gradient(45deg, #ffa726, #ff4500); /* Match other btn-success hover */
-    animation: none; /* Stop pulse on hover */
-}
 /* Style for Textarea in Feedback Form */
 .add-student-section textarea,
 .update-profile-container textarea {
@@ -990,12 +1000,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border: 2px solid #ff8c00;
     border-radius: 8px;
     background: rgba(60, 60, 60, 0.95);
-    color: #f5f5f5;
+    color: droom: #f5f5f5;
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    resize: vertical; /* Allow vertical resizing only */
+    resize: vertical;
 }
 
 .add-student-section textarea:focus,
@@ -1026,55 +1036,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     text-align: center;
     margin-bottom: 20px;
 }
+
 /* Back to Dashboard Button */
-.back-to-dashboard {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color:#ff8c00; /* Green color similar to btn-success */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-}
-
-.back-to-dashboard:hover {
-    background-color:#ff8c00; /* Darker green on hover */
-    color: white;
-    text-decoration: none;
-}
-
-/* Review Feedback Button */
-.feedback-review {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color:#ff8c00; /* Blue color similar to btn-primary */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.feedback-review:hover {
-    background-color:#ff8c00; /* Darker blue on hover */
-    color: white;
-    text-decoration: none;
-}
-
-/* Ensure buttons align nicely in containers */
-.button-container {
-    text-align: center;
-    margin-top: 10px;
-}
-
-.button-container a {
-    margin: 0 5px;
-}
-/* Styling for the Back to Dashboard button */
 .back-to-dashboard {
     display: inline-block;
     padding: 10px 20px;
@@ -1082,7 +1045,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 16px;
     font-weight: 500;
     color: #fff;
-    background-color:#ff8c00; /* A coral shade to match a modern theme */
+    background: #ff8c00 !important;
     border: none;
     border-radius: 5px;
     text-decoration: none;
@@ -1091,44 +1054,46 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .back-to-dashboard:hover {
-    background-color:#ff8c00; /* Slightly darker shade on hover */
-    transform: scale(1.03); /* Subtle scale effect on hover */
+    background: #e07b00 !important;
+    transform: scale(1.03);
 }
 
 .back-to-dashboard:active {
-    transform: scale(0.98); /* Slight press effect */
+    transform: scale(0.98);
 }
+
+/* Review Feedback Button */
+.feedback-review {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #ff8c00 !important;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.feedback-review:hover {
+    background: #e07b00 !important;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Delete Button */
 .delete-btn {
-    background-color:#ff8c00;
-    color: white;
+    background: #ff8c00 !important;
+    color: #fff;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
     margin-top: 10px;
+    border-radius: 5px;
 }
+
 .delete-btn:hover {
-    background-color:#ff8c00;
-}
-/* static/css/style.css */
-
-/* Resume Button */
-.custom-btn.resume-btn {
-    background-color:#ff8c00;
-    color: white;
-}
-
-.custom-btn.resume-btn:hover {
-    background-color:#ff8c00;
-}
-
-/* View Resume Button */
-.custom-btn.view-resume-btn {
-    background-color: #ff8c00;
-    color: white;
-}
-
-.custom-btn.view-resume-btn:hover {
-    background-color: #ff8c00;
+    background: #e07b00 !important;
 }
 
 /* Modal Styling */
@@ -1138,22 +1103,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .modal-header {
-    background-color:#ff8c00;
-    color: white;
+    background: #ff8c00;
+    color: #fff;
     border-bottom: none;
 }
 
 .btn-close {
     filter: invert(1);
-}
-
-/* Ensure consistency with existing buttons */
-.custom-btn {
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s;
 }
