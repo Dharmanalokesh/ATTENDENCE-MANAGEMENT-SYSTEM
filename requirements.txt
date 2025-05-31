@@ -9,3 +9,4 @@ apscheduler==3.10.4
 qrcode==7.4.2
 Pillow==10.4.0
 gunicorn==23.0.0
+Werkzeug==2.3.8  # Pin to a version compatible with flask-login==0.6.2
