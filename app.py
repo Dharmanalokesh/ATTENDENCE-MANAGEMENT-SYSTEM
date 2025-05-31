@@ -1090,6 +1090,13 @@ def trainer_dashboard():
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
     return response
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out successfully.", "success")
+    return redirect(url_for('home'))
+
 @app.route('/scan', methods=['POST'])
 @login_required
 def scan():
